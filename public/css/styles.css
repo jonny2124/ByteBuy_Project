@@ -216,9 +216,22 @@ body {
 
 .category-grid {
   display: flex;
-  justify-content: center;
   gap: 20px;
   margin-top: 20px;
+  overflow-x: auto; /* enables horizontal scroll */
+  scroll-snap-type: x mandatory; /* smooth snapping */
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-blue) transparent;
+  padding-bottom: 10px;
+}
+
+.category-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.category-grid::-webkit-scrollbar-thumb {
+  background-color: var(--accent-blue);
+  border-radius: 4px;
 }
 
 .category-card {
@@ -226,13 +239,23 @@ body {
   border: 2px solid var(--accent-blue);
   border-radius: 16px;
   padding: 20px;
-  width: 220px;
+  width: 600px; /* fixed width for horizontal cards */
+  min-height: 550px; /* adjusts with image and text */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  scroll-snap-align: start;
+  transition: transform 0.3s ease;
 }
 
-.img-box {
+.category-card:hover {
+  transform: translateY(-6px);
+}
+
+.category-image {
   width: 100%;
-  height: 140px;
-  background: #d9d9d9;
+  height: 400px; /* ensures all images have the same height */
+  object-fit: cover; /* ensures image fills box nicely */
   border-radius: 8px;
   margin-bottom: 12px;
 }
@@ -246,42 +269,156 @@ body {
 .deal-grid {
   display: flex;
   justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  gap: 30px;
+  flex-wrap: wrap;
 }
 
 .deal-card {
   background: #fff;
-  border: 2px solid var(--primary-yellow);
-  border-radius: 16px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
   padding: 20px;
-  width: 220px;
+  width: 300px;
+  min-height: 420px; 
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.deal-card:hover {
+  transform: translateY(-4px);
+}
+
+.deal-sale {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  background: #555;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+}
+
+.deal-image {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.old-price {
+  text-decoration: line-through;
+  color: #888;
+  margin: 5px 0;
+}
+
+.new-price {
+  color: #000;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 8px;
+}
+
+/* Countdown Timer Styling */
+.timer {
+  display: flex;
+  justify-content: center;
+  gap: 16px; /* spacing between groups */
+  margin-top: 10px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.timer div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.timer span.value {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #000;
+}
+
+.timer span.label {
+  font-size: 0.8em;
+  color: #666;
+  margin-top: 2px;
+  letter-spacing: 0.5px;
 }
 
 /* BEST SELLERS */
 .best-sellers {
-  background: var(--accent-orange);
-  padding: 40px 5%;
-  text-align: center;
-  color: var(--text-light);
+  background: var(--dark-bg);
+  padding: 40px 8%;
+  color: var(--text-dark);
 }
 
-.best-grid {
+.best-highlight {
   display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 20px;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--primary-yellow);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 40px;
 }
 
-.best-card {
-  background: #fff;
-  border-radius: 16px;
-  width: 220px;
-  padding: 20px;
+.best-content {
+  flex: 1;
+  color: #000;
 }
 
-.best-card .img-box {
-  background: #555;
+.best-content .best-tag {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.best-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.best-price {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.best-price span {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #000;
+}
+
+.best-content .cta-btn {
+  background: #000;
+  color: #fff;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.best-content .cta-btn:hover {
+  opacity: 0.8;
+}
+
+.best-image {
+  flex: 1;
+  text-align: right;
+}
+
+.best-image img {
+  width: 100%;
+  min-width: 600px;
+  object-fit: cover;
+  border-radius: 12px;
 }
 
 /* FOOTER */
