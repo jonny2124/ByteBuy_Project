@@ -37,29 +37,29 @@
 	<!-- PROMOTIONS -->
 	<section class="promo-container">
 		<div class="promo-highlight">
-		<div class="promo-content">
-			<p class="promo-tag">Flash Deal</p>
-			<h2>MacBook Air M4 – Power Meets Portability</h2>
-			<p class="promo-desc">Lightweight performance with up to 18 hours of battery life.</p>
-			<p class="promo-price">Starting at $1,299</p>
-			<button class="cta-btn dark-btn">Shop Now</button>
-		</div>
-		<div class="promo-image">
-			<img src="assets/macbook.jpeg" alt="MacBook Air M4">
-		</div>
+			<div class="promo-content">
+				<p class="promo-tag">Flash Deal</p>
+				<h2>MacBook Air M4 – Power Meets Portability</h2>
+				<p class="promo-desc">Lightweight performance with up to 18 hours of battery life.</p>
+				<div class="promo-image">
+					<img src="assets/macbook.jpeg" alt="MacBook Air M4">
+				</div>	
+				<p class="promo-price">Starting at $1,299</p>
+				<button class="cta-btn dark-btn">Shop Now</button>
+			</div>
 		</div>
 
 		<div class="promo-highlight">
-		<div class="promo-content">
-			<p class="promo-tag">Flash Deal</p>
-			<h2>iPad Pro (11-inch, Wi-Fi + Cellular)</h2>
-			<p class="promo-desc">Power and portability, with Apple Pencil compatibility.</p>
-			<p class="promo-price">Starting at $799</p>
-			<button class="cta-btn dark-btn">Shop Now</button>
-		</div>
-		<div class="promo-image">
-			<img src="assets/ipad.jpg" alt="iPad Pro">
-		</div>
+			<div class="promo-content">
+				<p class="promo-tag">Flash Deal</p>
+				<h2>iPad Pro (11-inch, Wi-Fi + Cellular)</h2>
+				<p class="promo-desc">Power and portability, with Apple Pencil compatibility.</p>
+				<div class="promo-image">
+					<img src="assets/ipad.jpg" alt="iPad Pro">
+				</div>
+				<p class="promo-price">Starting at $799</p>
+				<button class="cta-btn dark-btn">Shop Now</button>
+			</div>
 		</div>
 	</section>
 
@@ -125,20 +125,55 @@
 
 	<!-- FOOTER -->
 	<footer class="footer">
-		<div>
-		<h4>ByteBuy</h4>
-		<p>Affordable, reliable, and future-ready tech for everyone.</p>
+	<div class="footer-container">
+
+		<div class="footer-brand">
+			<h4>ByteBuy</h4>
+			<p>Affordable, reliable, and future-ready tech for everyone.</p>
+			<p class="footer-tagline">Empowering the next generation of smart shoppers.</p>
 		</div>
-		<div>
-		<h4>Quick Links</h4>
-		<a href="#">About</a><br>
-		<a href="#">Contact</a><br>
-		<a href="#">Privacy Policy</a>
+
+		<div class="footer-column">
+			<h4>Products</h4>
+			<a href="#">Apple Watch Series</a>
+			<a href="#">Refurbished iPad 4th</a>
+			<a href="#">Apple 9.7” iPad</a>
+			<a href="#">Apple iPhone 6s 16GB</a>
+			<a href="#">Apple Magic Mouse</a>
 		</div>
-		<div>
-		<h4>Follow Us</h4>
-		<p>Instagram | Twitter | LinkedIn</p>
+
+		<div class="footer-column">
+			<h4>Customer Service</h4>
+			<a href="#">News</a>
+			<a href="#">FAQ</a>
+			<a href="#">Shop</a>
+			<a href="#">About Us</a>
+			<a href="#">Contacts</a>
 		</div>
+
+		<div class="footer-column">
+			<h4>Socials</h4>
+			<a href="#">Twitter</a>
+			<a href="#">YouTube</a>
+			<a href="#">Instagram</a>
+			<a href="#">Snapchat</a>
+			<a href="#">Facebook</a>
+		</div>
+
+		<div class="footer-column">
+			<h4>Customer Care</h4>
+			<a href="#">Sale</a>
+			<a href="#">Shop</a>
+			<a href="#">Cart</a>
+			<a href="#">My Orders</a>
+			<a href="#">Contact</a>
+		</div>
+	</div>
+
+	<div class="footer-bottom">
+		<p>© 2025 ByteBuy. All rights reserved.</p>
+		<p>Privacy Policy | Terms & Conditions</p>
+	</div>
 	</footer>
 
 	<script src="js/timer.js"></script>
