@@ -9,8 +9,8 @@
     <nav>
       <a href="index.php" class="<?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : '' ?>">Home</a>
       <a href="shop.php" class="<?= basename($_SERVER['PHP_SELF']) == 'shop.php' ? 'active' : '' ?>">Shop</a>
-      <a href="#">Cart</a>
-      <a href="#">Track Order</a>
+      <a href="cart.php" class="<?= basename($_SERVER['PHP_SELF']) == 'cart.php' ? 'active' : '' ?>">Cart</a>
+      <a href="order-status.php" class="<?= basename($_SERVER['PHP_SELF']) == 'order-status.php' ? 'active' : '' ?>">Track Order</a>
     </nav>
   </div>
 </header>
