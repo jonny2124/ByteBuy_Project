@@ -73,6 +73,43 @@
   </main>
 
   <?php include 'footer.php'; ?>
+<?php
+// If order code is present, fetch order details and expose them to the client via a JS variable.
+if (!empty($_GET['code'])) {
+  require_once __DIR__ . '/db.php';
+  $code = $_GET['code'];
+  // Try to fetch the order by order_code
+  $stmt = $pdo->prepare('SELECT id, order_code, created_at, total FROM orders WHERE order_code = ? LIMIT 1');
+  $stmt->execute([$code]);
+  $order = $stmt->fetch();
+  if ($order) {
+    // fetch items
+    $stmt2 = $pdo->prepare('SELECT oi.sku, oi.name, oi.quantity AS qty, oi.price, IFNULL(i.image, "") AS image FROM order_items oi LEFT JOIN items i ON oi.item_id = i.id WHERE oi.order_id = ?');
+    $stmt2->execute([$order['id']]);
+    $items = $stmt2->fetchAll();
+    // prepare a safe JSON payload
+    $payload = [
+      'code' => $order['order_code'],
+      'created_at' => $order['created_at'],
+      'subtotal' => (float)$order['total'],
+      'items' => []
+    ];
+    foreach ($items as $it) {
+      $payload['items'][] = [
+        'name' => $it['name'],
+        'qty' => (int)$it['qty'],
+        'price' => (float)$it['price'],
+        'total' => (int)$it['qty'] * (float)$it['price'],
+        'image' => $it['image'] ?: 'assets/home/placeholder.png',
+        'category' => ''
+      ];
+    }
+    $json = json_encode($payload, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
+    // store last order snapshot and expose data
+    echo "<script>try{ localStorage.setItem('bytebuy_last_order', JSON.stringify({id:'" . addslashes($order['order_code']) . "', date:'" . date('c') . "'})); }catch(e){}; window.__ORDER_DATA = {$json};</script>";
+  }
+}
+?>
 
 </body>
 </html>

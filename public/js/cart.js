@@ -97,30 +97,158 @@
     const remove = $('.remove', article);
     const warranty = $('.warranty', article);
 
-    minus?.addEventListener('click', () => {
+    minus?.addEventListener('click', async () => {
+      const old = parseInt(article.dataset.qty || (input.value || '1'), 10);
       const v = Math.max(1, (parseInt(input.value || '1', 10) - 1));
       input.value = v;
       recalc();
+      await syncQtyWithServer(article, old, v);
     });
-    plus?.addEventListener('click', () => {
+    plus?.addEventListener('click', async () => {
+      const old = parseInt(article.dataset.qty || (input.value || '1'), 10);
       const v = Math.max(1, (parseInt(input.value || '1', 10) + 1));
       input.value = v;
       recalc();
+      await syncQtyWithServer(article, old, v);
     });
-    input?.addEventListener('input', () => {
+    input?.addEventListener('input', async () => {
+      const old = parseInt(article.dataset.qty || '1', 10);
       const n = parseInt(input.value, 10);
       if (isNaN(n) || n < 1) input.value = 1;
       recalc();
+      const newV = Math.max(1, parseInt(input.value, 10));
+      await syncQtyWithServer(article, old, newV);
     });
-    remove?.addEventListener('click', () => {
+    remove?.addEventListener('click', async () => {
+      // call server to remove and return stock
+      const token = localStorage.getItem('cart_token');
+      const sku = article.dataset.sku;
+      if (token && sku) {
+        try {
+          const form = new URLSearchParams();
+          form.append('action','remove');
+          form.append('cart_token', token);
+          form.append('sku', sku);
+          const resp = await fetch('cart.php', { method: 'POST', body: form });
+          const j = await resp.json();
+          if (!j.success) throw new Error(j.message || 'Remove failed');
+        } catch (err) {
+          alert('Unable to remove item: ' + (err.message || err));
+          return;
+        }
+      }
       article.remove();
       recalc();
     });
     warranty?.addEventListener('change', recalc);
   }
 
-  // Bind all items
-  $$('.cart-item', list).forEach(bindItem);
+  // Load server cart if a cart token exists, otherwise bind existing DOM items
+  async function loadServerCartAndRender(){
+    const token = localStorage.getItem('cart_token');
+    if (!token) {
+      $$('.cart-item', list).forEach(bindItem);
+      recalc();
+      return;
+    }
+    // request server cart
+    try {
+      const form = new URLSearchParams();
+      form.append('action','view');
+      form.append('cart_token', token);
+      const resp = await fetch('cart.php', { method: 'POST', body: form });
+      const json = await resp.json();
+      if (json.success && json.cart && Array.isArray(json.cart.items)){
+        // build DOM
+        list.innerHTML = '';
+        json.cart.items.forEach(it => {
+          const article = document.createElement('article');
+          article.className = 'cart-item';
+          article.dataset.price = it.price.toFixed(2);
+          article.dataset.sku = it.sku;
+          article.dataset.qty = it.qty;
+          article.innerHTML = `
+            <div class="item-media"><img src="${it.image || 'assets/home/placeholder.png'}" alt="${it.name}"></div>
+            <div class="item-info">
+              <div class="item-head">
+                <h3 class="item-name">${it.name}</h3>
+                <span class="item-category">${it.category || ''}</span>
+              </div>
+              <p class="item-price">$<span class="unit-price">${it.price.toFixed(2)}</span></p>
+              <label class="addon">
+                <input type="checkbox" class="warranty" data-warranty="0" />
+                <span>Add 2‑Year Protection (+$0)</span>
+              </label>
+              <div class="item-actions">
+                <div class="qty">
+                  <button class="btn-qty minus" aria-label="Decrease quantity">−</button>
+                  <input type="number" class="qty-input" value="${it.qty}" min="1"/>
+                  <button class="btn-qty plus" aria-label="Increase quantity">+</button>
+                </div>
+                <div class="item-total-wrap">
+                  <span class="item-total-label">Total</span>
+                  <span class="item-total">$${(it.qty * it.price).toFixed(2)}</span>
+                </div>
+              </div>
+              <div class="item-links">
+                <button class="link save-later" type="button">Save for later</button>
+                <button class="link remove" type="button">Remove</button>
+              </div>
+            </div>
+          `;
+          list.appendChild(article);
+        });
+        $$('.cart-item', list).forEach(bindItem);
+        recalc();
+        return;
+      }
+    } catch (e) {
+      console.warn('Could not load server cart', e);
+    }
+    // fallback: bind what is already in DOM
+    $$('.cart-item', list).forEach(bindItem);
+    recalc();
+  }
+
+  // Load server cart if a cart token exists, otherwise bind existing DOM items
+  // Discount toggle
+  discountToggle?.addEventListener('change', recalc);
+
+
+  // sync qty changes to server (update cart_items and reserve/release stock)
+  async function syncQtyWithServer(article, oldQty, newQty){
+    const token = localStorage.getItem('cart_token');
+    const sku = article.dataset.sku;
+    if (!token || !sku) {
+      article.dataset.qty = newQty;
+      return;
+    }
+    try {
+      const form = new URLSearchParams();
+      form.append('action','update');
+      form.append('cart_token', token);
+      form.append('sku', sku);
+      form.append('qty', String(newQty));
+      const resp = await fetch('cart.php', { method: 'POST', body: form });
+      const j = await resp.json();
+      if (!j.success) {
+        alert(j.message || 'Failed to update quantity');
+        const input = $('.qty-input', article);
+        input.value = oldQty;
+        recalc();
+        return;
+      }
+      article.dataset.qty = newQty;
+    } catch (err) {
+      console.error('Failed to sync qty', err);
+      alert('Unable to update quantity on server. Try again later.');
+      const input = $('.qty-input', article);
+      input.value = oldQty;
+      recalc();
+    }
+  }
+
+  loadServerCartAndRender();
 
   // Discount toggle
   discountToggle?.addEventListener('change', recalc);

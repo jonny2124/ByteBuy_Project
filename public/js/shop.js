@@ -142,11 +142,39 @@ function render(products) {
     });
   });
 
-  // Bind add to cart hover pulse (visual only for now)
+  // Bind add to cart: send to server using a local cart token (no session cookie required)
   document.querySelectorAll('.btn-add').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.add('added');
-      setTimeout(() => btn.classList.remove('added'), 900);
+    btn.addEventListener('click', async () => {
+      const sku = btn.dataset.id;
+      // create cart token if missing
+      let token = localStorage.getItem('cart_token');
+      if (!token) {
+        token = 'ct_' + Date.now() + '_' + Math.random().toString(36).slice(2,9);
+        localStorage.setItem('cart_token', token);
+      }
+
+      const form = new URLSearchParams();
+      form.append('action', 'add');
+      form.append('cart_token', token);
+      form.append('sku', sku);
+      form.append('qty', '1');
+
+      try {
+        const res = await fetch('cart.php', { method: 'POST', body: form });
+        const data = await res.json();
+        if (data.success) {
+          btn.classList.add('added');
+          setTimeout(() => btn.classList.remove('added'), 900);
+          // optional: update a cart count UI if present
+          const evt = new CustomEvent('cart.updated', { detail: data });
+          window.dispatchEvent(evt);
+        } else {
+          alert(data.message || 'Failed to add to cart');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error while adding to cart');
+      }
     });
   });
 }

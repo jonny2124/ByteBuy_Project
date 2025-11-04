@@ -70,20 +70,30 @@
   }
 
   // Init
-  const cart = loadCart();
-  const orderId = genOrderId();
-  const today = new Date();
-
-  $('#orderId').textContent = orderId;
-  $('#orderDate').textContent = formatDate(today);
+  // Init — prefer server-provided order data when available
+  const serverOrder = window.__ORDER_DATA || null;
+  if (serverOrder) {
+    const orderDate = serverOrder.created_at ? new Date(serverOrder.created_at) : new Date();
+    $('#orderId').textContent = serverOrder.code || serverOrder.id || 'BB-000000';
+    $('#orderDate').textContent = formatDate(orderDate);
   $('#deliveryEstimate').textContent = estimateRange(3, 5);
+    renderItems(serverOrder);
+    updateSummary({ subtotal: serverOrder.subtotal || 0 });
+    try { localStorage.setItem('bytebuy_last_order', JSON.stringify({ id: serverOrder.code || serverOrder.id, date: orderDate.toISOString() })); } catch (e) {}
+  } else {
+    const cart = loadCart();
+    const orderId = genOrderId();
+    const today = new Date();
 
-  renderItems(cart);
-  updateSummary(cart);
+    $('#orderId').textContent = orderId;
+    $('#orderDate').textContent = formatDate(today);
+    $('#deliveryEstimate').textContent = estimateRange(3, 5);
 
-  // Optionally record last order snapshot
-  try {
-    localStorage.setItem('bytebuy_last_order', JSON.stringify({ id: orderId, date: today.toISOString() }));
-  } catch(e){}
+    renderItems(cart);
+    updateSummary(cart);
+
+    // Optionally record last order snapshot
+    try { localStorage.setItem('bytebuy_last_order', JSON.stringify({ id: orderId, date: today.toISOString() })); } catch(e){}
+  }
 })();
 

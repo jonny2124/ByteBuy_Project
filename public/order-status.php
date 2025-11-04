@@ -1,3 +1,72 @@
+<?php
+// Simple server-side API for order lookup by order id (numeric) or guest email.
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'find') {
+  require_once __DIR__ . '/db.php';
+  header('Content-Type: application/json');
+
+  $orderIdRaw = trim($_POST['orderId'] ?? $_POST['order'] ?? '');
+  $email = trim($_POST['email'] ?? '');
+  try {
+    if ($orderIdRaw !== '') {
+      // try lookup by order_code first (exact match like 'BB-123456')
+  $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email FROM orders WHERE order_code = ?');
+      $stmt->execute([$orderIdRaw]);
+      $order = $stmt->fetch();
+      if (!$order) {
+        // if not found, try numeric id extraction
+        if (preg_match('/(\d+)/', $orderIdRaw, $m)) {
+          $orderId = $m[1];
+          $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email FROM orders WHERE id = ?');
+          $stmt->execute([$orderId]);
+          $order = $stmt->fetch();
+        } else {
+          $order = false;
+        }
+      }
+    } elseif ($email !== '') {
+  $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email FROM orders WHERE guest_email = ? ORDER BY created_at DESC LIMIT 1');
+      $stmt->execute([$email]);
+      $order = $stmt->fetch();
+    } else {
+      throw new Exception('No lookup value provided');
+    }
+
+    if (!$order) {
+      echo json_encode(['success' => false, 'message' => 'Order not found']);
+      exit;
+    }
+
+    // fetch order items (include image when available)
+    $stmt = $pdo->prepare('SELECT oi.item_id, oi.sku, oi.name, oi.quantity, oi.price, IFNULL(i.image, "") AS image FROM order_items oi LEFT JOIN items i ON oi.item_id = i.id WHERE oi.order_id = ?');
+    $stmt->execute([$order['id']]);
+    $items = $stmt->fetchAll();
+
+    $subtotal = 0.0;
+    foreach ($items as &$it) {
+      $it['total'] = (float)$it['quantity'] * (float)$it['price'];
+      $subtotal += $it['total'];
+      // ensure proper types
+      $it['quantity'] = (int)$it['quantity'];
+      $it['price'] = (float)$it['price'];
+    }
+
+    echo json_encode(['success' => true, 'order' => [
+      'id' => $order['id'],
+      'code' => isset($order['order_code']) ? $order['order_code'] : null,
+      'created_at' => $order['created_at'],
+      'status' => $order['status'],
+      'guest_email' => $order['guest_email'],
+      'items' => $items,
+      'subtotal' => $subtotal
+    ]]);
+  } catch (Exception $e) {
+    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+  }
+  exit;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

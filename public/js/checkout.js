@@ -7,7 +7,24 @@
 
   function currency(n){ return `$${n.toFixed(2)}`; }
 
-  function loadCart(){
+  async function loadCart(){
+    // If a server cart token is present, prefer the server cart
+    const token = localStorage.getItem('cart_token');
+    if (token) {
+      try {
+        const form = new URLSearchParams();
+        form.append('action','view');
+        form.append('cart_token', token);
+        const resp = await fetch('cart.php', { method: 'POST', body: form });
+        if (resp.ok){
+          const json = await resp.json();
+          if (json.success) return json.cart;
+        }
+      } catch (e) {
+        console.warn('Failed to load server cart, falling back to local cart', e);
+      }
+    }
+
     try {
       const raw = localStorage.getItem('bytebuy_cart');
       if (!raw) return null;
@@ -61,10 +78,21 @@
   }
 
   // Initialize
-  const cartData = loadCart();
-  renderItems(cartData);
-  let shipping = ($('input[name="shipping"]:checked')?.value) || 'standard';
-  updateSummary(calcTotals(cartData, shipping));
+  let shipping = 'standard';
+  let cartData = null;
+  (async ()=>{
+    cartData = await loadCart();
+    renderItems(cartData);
+    shipping = ($('input[name="shipping"]:checked')?.value) || 'standard';
+    updateSummary(calcTotals(cartData, shipping));
+
+    // listen for cart updates from other pages
+    window.addEventListener('cart.updated', async () => {
+      cartData = await loadCart();
+      renderItems(cartData);
+      updateSummary(calcTotals(cartData, shipping));
+    });
+  })();
 
   // Shipping change
   $$('input[name="shipping"]').forEach(r => r.addEventListener('change', () => {
@@ -81,16 +109,31 @@
     else { payNow.classList.remove('hidden'); payCard.classList.add('hidden'); }
   }));
 
-  // Place order demo
+  // Place order: submit to server processor with cart_token (no PHP sessions)
   $('#placeOrder')?.addEventListener('click', () => {
-    // Simple client-side validation for key fields
     const requiredIds = ['firstName','lastName','email','phone','address1','city','state','postal','country'];
     const missing = requiredIds.filter(id => !($('#'+id)?.value?.trim()));
     if (missing.length){
       alert('Please fill out all required billing fields.');
       return;
     }
-    // Navigate to order confirmation page
-    window.location.href = 'order-confirmation.php';
+
+    // build form and submit so server can redirect to confirmation
+    const token = localStorage.getItem('cart_token') || '';
+    if (!token){ alert('Cart token missing. Please add items to cart.'); return; }
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'checkout_process.php';
+
+    function add(name, value){ const i = document.createElement('input'); i.type='hidden'; i.name = name; i.value = value; form.appendChild(i); }
+    add('cart_token', token);
+    add('guest_email', $('#email')?.value || '');
+    add('shipping_address', `${$('#address1')?.value || ''} ${$('#address2')?.value || ''}`);
+    add('billing_address', `${$('#address1')?.value || ''} ${$('#address2')?.value || ''}`);
+    add('payment_method', $('input[name="payment"]:checked')?.value || 'card');
+
+    document.body.appendChild(form);
+    form.submit();
   });
 })();
