@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
       <!-- SUMMARY -->
       <aside class="cart-summary" aria-labelledby="summaryTitle">
-        <h2 id="summaryTitle">Order Summary</h2>
+        <h2 id="summaryTitle">Order Summary</h2>  
 
         <div class="summary-row">
           <span>Subtotal</span>
@@ -282,3 +282,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 
 </body>
 </html>
+
+

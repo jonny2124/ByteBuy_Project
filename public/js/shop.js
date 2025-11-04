@@ -1,6 +1,6 @@
-// ===== PRODUCT DATA =====
-// Backend-sourced when available; falls back to this static list.
-const FALLBACK_PRODUCTS = [
+// ===== PRODUCT DATA (front-end only) =====
+// Keep existing assets from your home; others use placeholders you can replace.
+const PRODUCTS = [
   // Laptops (8)
   {id:"lap1", name:"MacBook Air M2", category:"Laptops", price:1099, rating:4.6, img:"assets/deal2.jpeg"},
   {id:"lap2", name:"MacBook Air M4", category:"Laptops", price:1299, rating:4.8, img:"assets/macbook.jpeg"},
@@ -51,8 +51,6 @@ const FALLBACK_PRODUCTS = [
   {id:"ac7", name:"Samsung 45W PD Charger", category:"Accessories", price:39, rating:4.3, img:"assets/placeholder_acc7.jpg"},
   {id:"ac8", name:"Baseus Laptop Stand", category:"Accessories", price:29, rating:4.2, img:"assets/placeholder_acc8.jpg"},
 ];
-
-let PRODUCTS = FALLBACK_PRODUCTS.slice();
 
 // ===== Helpers =====
 const grid = document.getElementById('productGrid');
@@ -144,10 +142,69 @@ function render(products) {
     });
   });
 
+  // Check stock level for a product
+  async function checkStock(sku) {
+    try {
+      const response = await fetch(`check_stock.php?sku=${sku}`);
+      const data = await response.json();
+      return data.stock;
+    } catch (error) {
+      console.error('Error checking stock:', error);
+      return null;
+    }
+  }
+
+  // Update button state based on stock
+  async function updateButtonState(btn, sku) {
+    const stock = await checkStock(sku);
+    if (stock !== null) {
+      btn.disabled = stock <= 0;
+      if (stock <= 0) {
+        btn.textContent = 'Out of Stock';
+      }
+    }
+  }
+
+  // Show notification function
+  function showNotification(message, isError = false) {
+    const overlay = document.getElementById('notificationOverlay');
+    const notification = document.getElementById('notification');
+    
+    notification.textContent = message;
+    notification.style.backgroundColor = isError ? '#dc2626' : '#444444';
+    overlay.style.backgroundColor = isError ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.5)';
+    
+    overlay.classList.add('show');
+    notification.classList.add('show');
+    
+    // Remove after 1.5 seconds
+    setTimeout(() => {
+      notification.classList.add('hide');
+      overlay.classList.add('hide');
+      setTimeout(() => {
+        overlay.classList.remove('show', 'hide');
+        notification.classList.remove('show', 'hide');
+      }, 300);
+    }, 1500);
+  }
+
   // Bind add to cart: send to server using a local cart token (no session cookie required)
   document.querySelectorAll('.btn-add').forEach(btn => {
+    const sku = btn.dataset.id;
+    // Check initial stock level
+    updateButtonState(btn, sku);
+    
     btn.addEventListener('click', async () => {
-      const sku = btn.dataset.id;
+      // Check stock again when clicking (in case it changed)
+      const stock = await checkStock(sku);
+      const product = PRODUCTS.find(p => p.id === sku);
+      
+      if (stock <= 0) {
+        showNotification(`"${product.name}" is out of stock`, true); // true indicates error state
+        updateButtonState(btn, sku); // Update button state
+        return;
+      }
+      
       // create cart token if missing
       let token = localStorage.getItem('cart_token');
       if (!token) {
@@ -165,17 +222,22 @@ function render(products) {
         const res = await fetch('cart.php', { method: 'POST', body: form });
         const data = await res.json();
         if (data.success) {
+          // Show success notification after server confirms
+          showNotification(`"${product.name}" added to cart`);
           btn.classList.add('added');
           setTimeout(() => btn.classList.remove('added'), 900);
           // optional: update a cart count UI if present
           const evt = new CustomEvent('cart.updated', { detail: data });
           window.dispatchEvent(evt);
         } else {
-          alert(data.message || 'Failed to add to cart');
+          // show error notification instead of alert; include product name when helpful
+          const errMsg = data.message || 'Failed to add to cart';
+          const fullMsg = product && product.name ? `"${product.name}" ${errMsg}` : errMsg;
+          showNotification(fullMsg, true);
         }
       } catch (e) {
         console.error(e);
-        alert('Network error while adding to cart');
+        showNotification('Network error while adding to cart', true);
       }
     });
   });
@@ -219,31 +281,8 @@ function getFilteredSorted() {
   return list;
 }
 
-// Try to load products from backend, else use fallback
-async function initShop(){
-  try {
-    const resp = await fetch('products.php');
-    if (resp.ok) {
-      const j = await resp.json();
-      if (j && j.success && Array.isArray(j.items) && j.items.length) {
-        PRODUCTS = j.items.map(p => ({
-          id: p.id,
-          name: p.name,
-          category: p.category,
-          price: Number(p.price),
-          rating: Number(p.rating ?? 4.5),
-          img: p.img
-        }));
-      }
-    }
-  } catch (e) {
-    // ignore and use fallback
-  }
-  render(getFilteredSorted());
-}
-
 // Init
-initShop();
+render(getFilteredSorted());
 
 // Bind controls
 filterBtns.forEach(btn => {

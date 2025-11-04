@@ -79,7 +79,7 @@
         })),
         subtotal,
         discount,
-        coupon_code: appliedPromoCode,
+          coupon_code: appliedPromoCode,
         coupon_discount: couponDiscount,
         tax,
         total,
@@ -121,7 +121,15 @@
       if (isNaN(n) || n < 1) input.value = 1;
       recalc();
       const newV = Math.max(1, parseInt(input.value, 10));
-      await syncQtyWithServer(article, old, newV);
+      
+      const result = await syncQtyWithServer(article, old, newV);
+      
+      if (!result.success && result.message) {
+        showNotification(result.message, true);
+        // Revert to old value if update failed
+        input.value = old;
+        recalc();
+      }
     });
     remove?.addEventListener('click', async () => {
       // call server to remove and return stock
@@ -133,18 +141,69 @@
           form.append('action','remove');
           form.append('cart_token', token);
           form.append('sku', sku);
-          const resp = await fetch('cart.php', { method: 'POST', body: form });
-          const j = await resp.json();
-          if (!j.success) throw new Error(j.message || 'Remove failed');
-        } catch (err) {
-          alert('Unable to remove item: ' + (err.message || err));
-          return;
-        }
+            const resp = await fetch('cart.php', { method: 'POST', body: form });
+            const j = await resp.json();
+            if (!j.success) {
+              showNotification(j.message || 'Unable to remove item', true);
+              return;
+            }
+          } catch (err) {
+            showNotification('Unable to remove item: ' + (err.message || err), true);
+            return;
+          }
       }
       article.remove();
       recalc();
     });
     warranty?.addEventListener('change', recalc);
+  }
+
+  // Show notification function
+  function showNotification(message, isError = false) {
+    let overlay = document.getElementById('notificationOverlay');
+    let notification = document.getElementById('notification');
+
+    // If overlay/notification missing, create them and append to body
+    if (!overlay || !notification) {
+      overlay = document.createElement('div');
+      overlay.id = 'notificationOverlay';
+      overlay.className = 'notification-overlay';
+      notification = document.createElement('div');
+      notification.id = 'notification';
+      notification.className = 'notification';
+      notification.setAttribute('role', 'alert');
+      notification.setAttribute('aria-live', 'polite');
+      overlay.appendChild(notification);
+      document.body.appendChild(overlay);
+    }
+
+    notification.textContent = message;
+    notification.style.backgroundColor = isError ? '#dc2626' : '#444444';
+    overlay.style.backgroundColor = isError ? 'rgba(0, 0, 0, 0.6)' : 'rgba(0, 0, 0, 0.5)';
+
+    // allow click to dismiss immediately
+    overlay.onclick = () => {
+      notification.classList.add('hide');
+      overlay.classList.add('hide');
+      setTimeout(() => {
+        overlay.classList.remove('show', 'hide');
+        notification.classList.remove('show', 'hide');
+      }, 300);
+    };
+
+    overlay.classList.add('show');
+    notification.classList.add('show');
+
+    // Display duration: longer for errors
+    const duration = isError ? 2000 : 1500;
+    setTimeout(() => {
+      notification.classList.add('hide');
+      overlay.classList.add('hide');
+      setTimeout(() => {
+        overlay.classList.remove('show', 'hide');
+        notification.classList.remove('show', 'hide');
+      }, 300);
+    }, duration);
   }
 
   // Load server cart if a cart token exists, otherwise bind existing DOM items
@@ -225,7 +284,7 @@
     const sku = article.dataset.sku;
     if (!token || !sku) {
       article.dataset.qty = newQty;
-      return;
+      return { success: true };
     }
     try {
       const form = new URLSearchParams();
@@ -236,19 +295,24 @@
       const resp = await fetch('cart.php', { method: 'POST', body: form });
       const j = await resp.json();
       if (!j.success) {
-        alert(j.message || 'Failed to update quantity');
+        // Use overlay notification instead of alert; include item name for clarity
+        const itemName = $('.item-name', article)?.textContent?.trim() || '';
+        const msg = j.message ? (itemName ? `"${itemName}" ${j.message}` : j.message) : 'Failed to update quantity';
+        showNotification(msg, true);
         const input = $('.qty-input', article);
         input.value = oldQty;
         recalc();
-        return;
+        return j;
       }
       article.dataset.qty = newQty;
+      return j;
     } catch (err) {
       console.error('Failed to sync qty', err);
-      alert('Unable to update quantity on server. Try again later.');
+      showNotification('Unable to update quantity on server. Try again later.', true);
       const input = $('.qty-input', article);
       input.value = oldQty;
       recalc();
+      return { success: false, message: err.message || String(err) };
     }
   }
 
@@ -279,7 +343,6 @@
       alert('Invalid promo code');
     }
   });
-
   // Initial calc
   recalc();
 })();

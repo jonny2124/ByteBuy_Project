@@ -6,7 +6,7 @@
   const $$ = (s, c = document) => Array.from(c.querySelectorAll(s));
 
   function currency(n){ return `$${n.toFixed(2)}`; }
-
+  
   function loadLocalSnapshot(){
     try {
       const raw = localStorage.getItem('bytebuy_cart');
@@ -19,7 +19,6 @@
 
   async function loadCart(){
     const localSnapshot = loadLocalSnapshot();
-
     // If a server cart token is present, prefer the server cart
     const token = localStorage.getItem('cart_token');
     if (token) {
@@ -33,19 +32,46 @@
           if (json.success) {
             const cart = json.cart || null;
             if (cart && localSnapshot) {
-              if (typeof localSnapshot.discount === 'number') cart.discount = localSnapshot.discount;
-              if (typeof localSnapshot.coupon_discount === 'number') cart.coupon_discount = localSnapshot.coupon_discount;
-              if (localSnapshot.coupon_code) cart.coupon_code = localSnapshot.coupon_code;
+              // Always use the latest client-side snapshot for display values
+              cart.subtotal = typeof localSnapshot.subtotal === 'number' ? localSnapshot.subtotal : (cart.subtotal || 0);
+              cart.discount = typeof localSnapshot.discount === 'number' ? localSnapshot.discount : 0;
+              cart.coupon_discount = typeof localSnapshot.coupon_discount === 'number' ? localSnapshot.coupon_discount : 0;
+              cart.coupon_code = localSnapshot.coupon_code || null;
+              
+              // Sync items with warranty info and correct totals
+              if (Array.isArray(localSnapshot.items)) {
+                cart.items = localSnapshot.items.map(it => ({
+                  name: it.name || '',
+                  category: it.category || '',
+                  image: it.image || '',
+                  qty: parseInt(it.qty || it.quantity || 1, 10),
+                  price: parseFloat(it.price || it.unitPrice || 0),
+                  warranty: !!it.warranty,
+                  warrantyPrice: parseFloat(it.warrantyPrice || 0),
+                  total: parseFloat(it.total || 0)
+                }));
+                
+                // Recompute subtotal from items if needed
+                if (typeof localSnapshot.subtotal !== 'number') {
+                  cart.subtotal = cart.items.reduce((sum, it) => 
+                    sum + (it.total || ((it.price + (it.warranty ? it.warrantyPrice : 0)) * it.qty)), 0);
+                }
+              }
             }
             return cart;
           }
+          return null;
         }
       } catch (e) {
         console.warn('Failed to load server cart, falling back to local cart', e);
       }
     }
 
-    return localSnapshot;
+    try {
+      const raw = localStorage.getItem('bytebuy_cart');
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch(e){ return null; }
   }
 
   function renderItems(data){
@@ -56,15 +82,17 @@
       return;
     }
     data.items.forEach(item => {
+      const itemTotal = item.total || ((item.price + (item.warranty ? item.warrantyPrice : 0)) * item.qty);
       const row = document.createElement('div');
       row.className = 'mini';
       row.innerHTML = `
-        <img src="${item.image}" alt="${item.name}">
+        <img src="${item.image || 'assets/home/placeholder.png'}" alt="${item.name}">
         <div class="meta">
           <div><strong>${item.name}</strong></div>
-          <div>${item.category} • Qty ${item.qty}${item.warranty ? ' • +Warranty' : ''}</div>
+          <div>${item.category || ''} • Qty ${item.qty}${item.warranty ? ' • +Warranty' : ''}</div>
+          ${item.warranty ? `<div class="muted">Includes ${currency(item.warrantyPrice)} warranty</div>` : ''}
         </div>
-        <div class="price">${currency(item.total)}</div>
+        <div class="price">${currency(itemTotal)}</div>
       `;
       wrap.appendChild(row);
     });
@@ -72,7 +100,7 @@
 
   function calcTotals(data, shipping){
     const subtotal = data?.subtotal || 0;
-    const discount = data?.discount || 0;
+    const discount = (data?.discount || 0) + (data?.coupon_discount || 0);  // Include both regular and coupon discounts
     const taxable = Math.max(0, subtotal - discount);
     const tax = taxable * TAX_RATE;
     const shippingFee = SHIPPING_FEES[shipping] || 0;
@@ -148,7 +176,6 @@
     add('shipping_address', `${$('#address1')?.value || ''} ${$('#address2')?.value || ''}`);
     add('billing_address', `${$('#address1')?.value || ''} ${$('#address2')?.value || ''}`);
     add('payment_method', $('input[name="payment"]:checked')?.value || 'card');
-
     add('coupon_code', cartData?.coupon_code || '');
 
     document.body.appendChild(form);

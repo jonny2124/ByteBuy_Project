@@ -82,7 +82,6 @@ try {
     }
 
     $total = max(0, $subtotal - $discount_total);
-
     // generate a unique order code (BB-123456) and create order (guest checkout: user_id NULL)
     $maxAttempts = 6;
     $order_code = null;
@@ -97,8 +96,8 @@ try {
         $order_code = 'BB-' . time();
     }
 
-    $stmt = $pdo->prepare('INSERT INTO orders (order_code, user_id, guest_email, total, discount_total, coupon_code, shipping_address, billing_address, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $status = 'pending';
+    $stmt = $pdo->prepare('INSERT INTO orders (order_code, user_id, guest_email, total, discount_total, coupon_code, shipping_address, billing_address, payment_method, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
     $stmt->execute([
         $order_code,
         null,
@@ -130,7 +129,6 @@ try {
     $stmt->execute([$cart_id]);
 
     $pdo->commit();
-
     if ($guest_email) {
         try {
             bytebuy_mailer_send_order_confirmation($pdo, (int)$order_id, $guest_email);
@@ -142,7 +140,38 @@ try {
     // redirect to confirmation with the human-friendly code
     header('Location: order-confirmation.php?code=' . urlencode($order_code));
     exit;
-} catch (Exception $e) {
+} catch (Throwable $e) {
     if ($pdo->inTransaction()) $pdo->rollBack();
-    echo 'Checkout failed: ' . htmlspecialchars($e->getMessage());
+    error_log('Checkout error: ' . $e->getMessage());
+    
+    // Show a user-friendly error page
+    ?><!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Checkout Error | ByteBuy</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <?php include 'header.php'; ?>
+        
+        <main style="max-width: 800px; margin: 2rem auto; padding: 2rem;">
+            <h1>Checkout Error</h1>
+            <p>We couldn't complete your order. The error has been logged.</p>
+            <p class="error-details" style="color: #dc2626; margin: 1rem 0;">
+                <?= htmlspecialchars($e->getMessage()) ?>
+            </p>
+            <div style="margin-top: 2rem;">
+                <a href="cart.php" class="cta-btn">Return to Cart</a>
+                <a href="checkout.php" class="cta-btn dark-btn">Try Again</a>
+            </div>
+        </main>
+
+        <?php include 'footer.php'; ?>
+    </body>
+    </html>
+    <?php
+    exit;
 }

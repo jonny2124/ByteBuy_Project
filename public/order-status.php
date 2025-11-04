@@ -9,14 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
   try {
     if ($orderIdRaw !== '') {
       // try lookup by order_code first (exact match like 'BB-123456')
-      $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email, total, discount_total, coupon_code FROM orders WHERE order_code = ?');
+  $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email FROM orders WHERE order_code = ?');
       $stmt->execute([$orderIdRaw]);
       $order = $stmt->fetch();
       if (!$order) {
         // if not found, try numeric id extraction
         if (preg_match('/(\d+)/', $orderIdRaw, $m)) {
           $orderId = $m[1];
-          $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email, total, discount_total, coupon_code FROM orders WHERE id = ?');
+          $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email FROM orders WHERE id = ?');
           $stmt->execute([$orderId]);
           $order = $stmt->fetch();
         } else {
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
       }
     } elseif ($email !== '') {
-      $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email, total, discount_total, coupon_code FROM orders WHERE guest_email = ? ORDER BY created_at DESC LIMIT 1');
+  $stmt = $pdo->prepare('SELECT id, order_code, created_at, status, guest_email FROM orders WHERE guest_email = ? ORDER BY created_at DESC LIMIT 1');
       $stmt->execute([$email]);
       $order = $stmt->fetch();
     } else {
@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
       $it['quantity'] = (int)$it['quantity'];
       $it['price'] = (float)$it['price'];
     }
+
 
     echo json_encode(['success' => true, 'order' => [
       'id' => $order['id'],

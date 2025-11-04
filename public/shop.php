@@ -47,6 +47,11 @@
     <!-- Cards are injected by shop.js -->
   </main>
 
+  <!-- Notification Container -->
+  <div id="notificationOverlay" class="notification-overlay">
+    <div id="notification" class="notification" role="alert" aria-live="polite"></div>
+  </div>
+
   <?php include 'footer.php'; ?>
 
   <script src="js/header.js"></script>
