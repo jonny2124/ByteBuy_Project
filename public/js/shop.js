@@ -1,6 +1,6 @@
-// ===== PRODUCT DATA (front-end only) =====
-// Keep existing assets from your home; others use placeholders you can replace.
-const PRODUCTS = [
+// ===== PRODUCT DATA =====
+// Backend-sourced when available; falls back to this static list.
+const FALLBACK_PRODUCTS = [
   // Laptops (8)
   {id:"lap1", name:"MacBook Air M2", category:"Laptops", price:1099, rating:4.6, img:"assets/deal2.jpeg"},
   {id:"lap2", name:"MacBook Air M4", category:"Laptops", price:1299, rating:4.8, img:"assets/macbook.jpeg"},
@@ -51,6 +51,8 @@ const PRODUCTS = [
   {id:"ac7", name:"Samsung 45W PD Charger", category:"Accessories", price:39, rating:4.3, img:"assets/placeholder_acc7.jpg"},
   {id:"ac8", name:"Baseus Laptop Stand", category:"Accessories", price:29, rating:4.2, img:"assets/placeholder_acc8.jpg"},
 ];
+
+let PRODUCTS = FALLBACK_PRODUCTS.slice();
 
 // ===== Helpers =====
 const grid = document.getElementById('productGrid');
@@ -142,11 +144,39 @@ function render(products) {
     });
   });
 
-  // Bind add to cart hover pulse (visual only for now)
+  // Bind add to cart: send to server using a local cart token (no session cookie required)
   document.querySelectorAll('.btn-add').forEach(btn => {
-    btn.addEventListener('click', () => {
-      btn.classList.add('added');
-      setTimeout(() => btn.classList.remove('added'), 900);
+    btn.addEventListener('click', async () => {
+      const sku = btn.dataset.id;
+      // create cart token if missing
+      let token = localStorage.getItem('cart_token');
+      if (!token) {
+        token = 'ct_' + Date.now() + '_' + Math.random().toString(36).slice(2,9);
+        localStorage.setItem('cart_token', token);
+      }
+
+      const form = new URLSearchParams();
+      form.append('action', 'add');
+      form.append('cart_token', token);
+      form.append('sku', sku);
+      form.append('qty', '1');
+
+      try {
+        const res = await fetch('cart.php', { method: 'POST', body: form });
+        const data = await res.json();
+        if (data.success) {
+          btn.classList.add('added');
+          setTimeout(() => btn.classList.remove('added'), 900);
+          // optional: update a cart count UI if present
+          const evt = new CustomEvent('cart.updated', { detail: data });
+          window.dispatchEvent(evt);
+        } else {
+          alert(data.message || 'Failed to add to cart');
+        }
+      } catch (e) {
+        console.error(e);
+        alert('Network error while adding to cart');
+      }
     });
   });
 }
@@ -189,8 +219,31 @@ function getFilteredSorted() {
   return list;
 }
 
+// Try to load products from backend, else use fallback
+async function initShop(){
+  try {
+    const resp = await fetch('products.php');
+    if (resp.ok) {
+      const j = await resp.json();
+      if (j && j.success && Array.isArray(j.items) && j.items.length) {
+        PRODUCTS = j.items.map(p => ({
+          id: p.id,
+          name: p.name,
+          category: p.category,
+          price: Number(p.price),
+          rating: Number(p.rating ?? 4.5),
+          img: p.img
+        }));
+      }
+    }
+  } catch (e) {
+    // ignore and use fallback
+  }
+  render(getFilteredSorted());
+}
+
 // Init
-render(getFilteredSorted());
+initShop();
 
 // Bind controls
 filterBtns.forEach(btn => {

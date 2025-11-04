@@ -75,22 +75,40 @@
     return 3; // delivered
   }
 
-  function hydrate(id, placed){
-    const cart = loadCart();
+  function hydrateFromOrder(order){
+    // order: { id, created_at, items: [ {name, quantity, price, total, image } ], subtotal }
+    const placed = order.created_at ? new Date(order.created_at) : Date.now();
     const eta = estimateRange(placed);
-    setMeta(id, placed, eta);
+    // prefer canonical order code from server when available
+    const displayId = order.code || order.order_code || ('BB-' + String(order.id).padStart(6,'0'));
+    setMeta(displayId, placed, eta);
     setWhen(placed);
     setSteps(computeState(placed));
+    // adapt items to expected shape
+    const cart = { items: (order.items || []).map(it => ({
+      name: it.name,
+      category: it.category || '',
+      qty: it.quantity || it.qty || 1,
+      warranty: false,
+      total: (it.total !== undefined) ? it.total : ((it.quantity || 1) * (it.price || 0)),
+      image: it.image || 'assets/home/placeholder.png'
+    })), subtotal: order.subtotal || 0 };
     renderItems(cart);
   }
 
-  // Initial attempt from last order
-  const last = loadLast();
-  if (last?.id){ hydrate(last.id, last.date || Date.now()); }
-  else { hydrate('BB-000000', Date.now()); }
+  // Hide any content until user performs a lookup
+  // Clear meta and items
+  setMeta('—', null, '—');
+  // clear when fields instead of calling setWhen so dates remain blank
+  $('#whenOrdered').textContent = '—';
+  $('#whenPacked').textContent = '—';
+  $('#whenShipped').textContent = '—';
+  $('#whenDelivered').textContent = '—';
+  setSteps(-1);
+  $('#statusItems').innerHTML = '<div class="empty">Enter Order ID or Email and click Check Status</div>';
 
-  // Form handling
-  $('#statusForm')?.addEventListener('submit', (e) => {
+  // Form handling: call server API to find order
+  $('#statusForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = ($('#orderId')?.value || '').trim();
     const email = ($('#email')?.value || '').trim();
@@ -98,13 +116,28 @@
       alert('Enter your Order ID or email to continue.');
       return;
     }
-    // Demo lookup: match local last order id if provided
-    if (id && last?.id && id.toUpperCase() === last.id.toUpperCase()){
-      hydrate(last.id, last.date || Date.now());
-    } else {
-      // Fallback: hydrate with a generated ID seeded from input for demo
-      const gen = id || (email ? 'BB-' + Math.floor(100000 + Math.random()*900000) : 'BB-000000');
-      hydrate(gen, Date.now());
+
+    const form = new URLSearchParams();
+    form.append('action', 'find');
+    if (id) form.append('orderId', id);
+    else form.append('email', email);
+
+    try {
+      const resp = await fetch('order-status.php', { method: 'POST', body: form });
+      const json = await resp.json();
+      if (!json.success) {
+        alert(json.message || 'Order not found');
+        // clear UI
+        setMeta('—', null, '—');
+        setWhen(null);
+        setSteps(-1);
+        $('#statusItems').innerHTML = '<div class="empty">No items to display. Enter a valid Order ID or email.</div>';
+        return;
+      }
+      hydrateFromOrder(json.order);
+    } catch (err) {
+      console.error(err);
+      alert('Unable to contact server. Try again later.');
     }
   });
 })();
