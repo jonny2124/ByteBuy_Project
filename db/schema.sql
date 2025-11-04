@@ -34,6 +34,8 @@ CREATE TABLE IF NOT EXISTS orders (
 	user_id INT UNSIGNED NULL,
 	guest_email VARCHAR(255) NULL,
 	total DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+	discount_total DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+	coupon_code VARCHAR(64) NULL,
 	currency CHAR(3) DEFAULT 'USD',
 	shipping_address TEXT,
 	billing_address TEXT,
@@ -43,6 +45,12 @@ CREATE TABLE IF NOT EXISTS orders (
 	updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Add discount tracking to orders
+ALTER TABLE orders
+  ADD COLUMN discount_total DECIMAL(12,2) NOT NULL DEFAULT 0.00,
+  ADD COLUMN coupon_code VARCHAR(64) NULL;
+
 
 -- Order items / lines
 CREATE TABLE IF NOT EXISTS order_items (
@@ -111,4 +119,18 @@ CREATE TABLE IF NOT EXISTS cart_items (
 	added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	CONSTRAINT fk_cartitems_cart FOREIGN KEY (cart_id) REFERENCES carts(id) ON DELETE CASCADE,
 	CONSTRAINT fk_cartitems_item FOREIGN KEY (item_id) REFERENCES items(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Coupons table for server-side promo validation
+CREATE TABLE IF NOT EXISTS coupons (
+    code VARCHAR(64) PRIMARY KEY,
+    type ENUM('percent','fixed') NOT NULL DEFAULT 'percent',
+    value DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+    active TINYINT(1) NOT NULL DEFAULT 1,
+    min_subtotal DECIMAL(10,2) NULL,
+    max_uses INT NULL,
+    uses INT NOT NULL DEFAULT 0,
+    expires_at DATETIME NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

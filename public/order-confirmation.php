@@ -79,7 +79,7 @@ if (!empty($_GET['code'])) {
   require_once __DIR__ . '/db.php';
   $code = $_GET['code'];
   // Try to fetch the order by order_code
-  $stmt = $pdo->prepare('SELECT id, order_code, created_at, total FROM orders WHERE order_code = ? LIMIT 1');
+  $stmt = $pdo->prepare('SELECT id, order_code, created_at, total, discount_total, coupon_code FROM orders WHERE order_code = ? LIMIT 1');
   $stmt->execute([$code]);
   $order = $stmt->fetch();
   if ($order) {
@@ -88,22 +88,29 @@ if (!empty($_GET['code'])) {
     $stmt2->execute([$order['id']]);
     $items = $stmt2->fetchAll();
     // prepare a safe JSON payload
+    $subtotal = 0.0;
     $payload = [
       'code' => $order['order_code'],
       'created_at' => $order['created_at'],
-      'subtotal' => (float)$order['total'],
+      'subtotal' => 0.0,
+      'discount' => isset($order['discount_total']) ? (float)$order['discount_total'] : 0.0,
+      'total' => (float)$order['total'],
+      'coupon_code' => $order['coupon_code'] ?? null,
       'items' => []
     ];
     foreach ($items as $it) {
+      $lineTotal = (int)$it['qty'] * (float)$it['price'];
+      $subtotal += $lineTotal;
       $payload['items'][] = [
         'name' => $it['name'],
         'qty' => (int)$it['qty'],
         'price' => (float)$it['price'],
-        'total' => (int)$it['qty'] * (float)$it['price'],
+        'total' => $lineTotal,
         'image' => $it['image'] ?: 'assets/home/placeholder.png',
         'category' => ''
       ];
     }
+    $payload['subtotal'] = $subtotal;
     $json = json_encode($payload, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP);
     // store last order snapshot and expose data
     echo "<script>try{ localStorage.setItem('bytebuy_last_order', JSON.stringify({id:'" . addslashes($order['order_code']) . "', date:'" . date('c') . "'})); }catch(e){}; window.__ORDER_DATA = {$json};</script>";

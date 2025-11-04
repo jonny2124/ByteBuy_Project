@@ -20,6 +20,7 @@
   const promoBtn = $('#applyPromo');
 
   let appliedPromoRate = 0; // 0..1
+  let appliedPromoCode = '';
 
   function currency(n){
     return `$${n.toFixed(2)}`;
@@ -41,6 +42,7 @@
     const toggleRate = discountToggle?.checked ? STUDENT_BUSINESS_DISCOUNT : 0;
     const combinedRate = Math.min(1, toggleRate + appliedPromoRate);
     const discount = subtotal * combinedRate;
+    const couponDiscount = subtotal * appliedPromoRate;
     const taxable = Math.max(0, subtotal - discount);
     const tax = taxable * TAX_RATE;
     const total = taxable + tax;
@@ -77,6 +79,8 @@
         })),
         subtotal,
         discount,
+        coupon_code: appliedPromoCode,
+        coupon_discount: couponDiscount,
         tax,
         total,
         ts: Date.now()
@@ -256,8 +260,24 @@
   // Promo handling
   promoBtn?.addEventListener('click', () => {
     const code = (promoInput.value || '').trim().toUpperCase();
-    appliedPromoRate = VALID_PROMOS[code] || 0;
-    recalc();
+    if (!code) {
+      appliedPromoRate = 0;
+      appliedPromoCode = '';
+      recalc();
+      return;
+    }
+
+    const rate = VALID_PROMOS[code];
+    if (rate) {
+      appliedPromoRate = rate;
+      appliedPromoCode = code;
+      recalc();
+    } else {
+      appliedPromoRate = 0;
+      appliedPromoCode = '';
+      recalc();
+      alert('Invalid promo code');
+    }
   });
 
   // Initial calc

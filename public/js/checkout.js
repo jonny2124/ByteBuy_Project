@@ -7,7 +7,19 @@
 
   function currency(n){ return `$${n.toFixed(2)}`; }
 
+  function loadLocalSnapshot(){
+    try {
+      const raw = localStorage.getItem('bytebuy_cart');
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch(e){
+      return null;
+    }
+  }
+
   async function loadCart(){
+    const localSnapshot = loadLocalSnapshot();
+
     // If a server cart token is present, prefer the server cart
     const token = localStorage.getItem('cart_token');
     if (token) {
@@ -18,18 +30,22 @@
         const resp = await fetch('cart.php', { method: 'POST', body: form });
         if (resp.ok){
           const json = await resp.json();
-          if (json.success) return json.cart;
+          if (json.success) {
+            const cart = json.cart || null;
+            if (cart && localSnapshot) {
+              if (typeof localSnapshot.discount === 'number') cart.discount = localSnapshot.discount;
+              if (typeof localSnapshot.coupon_discount === 'number') cart.coupon_discount = localSnapshot.coupon_discount;
+              if (localSnapshot.coupon_code) cart.coupon_code = localSnapshot.coupon_code;
+            }
+            return cart;
+          }
         }
       } catch (e) {
         console.warn('Failed to load server cart, falling back to local cart', e);
       }
     }
 
-    try {
-      const raw = localStorage.getItem('bytebuy_cart');
-      if (!raw) return null;
-      return JSON.parse(raw);
-    } catch(e){ return null; }
+    return localSnapshot;
   }
 
   function renderItems(data){
@@ -132,6 +148,8 @@
     add('shipping_address', `${$('#address1')?.value || ''} ${$('#address2')?.value || ''}`);
     add('billing_address', `${$('#address1')?.value || ''} ${$('#address2')?.value || ''}`);
     add('payment_method', $('input[name="payment"]:checked')?.value || 'card');
+
+    add('coupon_code', cartData?.coupon_code || '');
 
     document.body.appendChild(form);
     form.submit();

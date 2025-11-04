@@ -56,4 +56,18 @@ INSERT INTO items (sku, name, description, price, stock, image) VALUES
 INSERT INTO settings (`key`, `value`) VALUES
 ('store_name','ByteBuy Demo Store');
 
+-- Demo coupons (idempotent)
+INSERT INTO coupons (code, type, value, active, min_subtotal, max_uses, expires_at)
+VALUES
+('BYTE10','percent',10,1,200.00,NULL,NULL),
+('STUDENT5','percent',5,1,100.00,NULL,NULL),
+('FREESHIP','fixed',15,1,150.00,500,NULL)
+ON DUPLICATE KEY UPDATE
+  type = VALUES(type),
+  value = VALUES(value),
+  active = VALUES(active),
+  min_subtotal = VALUES(min_subtotal),
+  max_uses = VALUES(max_uses),
+  expires_at = VALUES(expires_at);
+
 -- End of seed
