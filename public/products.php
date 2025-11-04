@@ -62,13 +62,26 @@ try {
 
     $items = [];
     foreach ($rows as $r) {
+        $image = trim((string)($r['image'] ?? ''));
+        if ($image === '') {
+            $image = 'assets/products/placeholder.png';
+        } else {
+            $isAbsolute = preg_match('#^(https?:)?//#i', $image) === 1;
+            if (!$isAbsolute) {
+                $image = ltrim($image, '/');
+                if (strpos($image, 'assets/') !== 0) {
+                    $image = 'assets/products/' . $image;
+                }
+            }
+        }
+
         $items[] = [
             'id' => $r['sku'],
             'name' => $r['name'],
             'category' => map_category_from_sku($r['sku']),
             'price' => (float)$r['price'],
             'rating' => 4.5,
-            'img' => $r['image'] ?: 'assets/home/placeholder.png',
+            'img' => $image,
         ];
     }
 
