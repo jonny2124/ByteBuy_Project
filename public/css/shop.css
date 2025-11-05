@@ -68,7 +68,7 @@
 /* Sticky control bar */
 .shop-controls{
   position: sticky;
-  top: 50px;
+  top: 80px;
   z-index: 900;
   background: #fff;
   border-bottom: 1px solid #eee;
@@ -148,7 +148,7 @@
 
 /* Product grid */
 .shop-grid{
-  padding: 30px 5% 60px;
+  padding: 100px 5% 60px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 22px;

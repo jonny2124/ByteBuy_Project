@@ -93,7 +93,7 @@ function render(products) {
   grid.innerHTML = products.map(p => {
     const r = ratingsStore[p.id] ?? p.rating;
     return `
-      <article class="product-card" data-category="${p.category}">
+      <article id="product-${p.id}" class="product-card" data-category="${p.category}">
         <figure class="product-media">
           <img src="${p.img}" alt="${p.name}">
         </figure>
@@ -281,8 +281,47 @@ function getFilteredSorted() {
   return list;
 }
 
+// Optionally apply initial filter/sort from URL (?filter=...&sort=... or #filter=...)
+(() => {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const raw = (params.get('filter') || window.location.hash.replace('#filter=', '') || '').toLowerCase();
+    const map = {
+      'all': 'All',
+      'laptop': 'Laptops',
+      'laptops': 'Laptops',
+      'smartphone': 'Smartphones',
+      'smartphones': 'Smartphones',
+      'audio': 'Audio',
+      'storage': 'Storage',
+      'accessory': 'Accessories',
+      'accessories': 'Accessories'
+    };
+    const mapped = map[raw];
+    if (mapped) currentFilter = mapped;
+
+    const sort = (params.get('sort') || '').toLowerCase();
+    const allowedSort = ['default','price_asc','price_desc','rating_desc','name_asc'];
+    if (allowedSort.includes(sort)) currentSort = sort;
+  } catch {}
+})();
+
 // Init
 render(getFilteredSorted());
+
+// If URL contains #product-..., scroll to it after initial render
+try {
+  if (window.location.hash && window.location.hash.startsWith('#product-')) {
+    const el = document.querySelector(window.location.hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+} catch {}
+
+// Reflect initial active filter button if present
+filterBtns.forEach(b => {
+  if (b.dataset.filter === currentFilter) b.classList.add('active');
+  else b.classList.remove('active');
+});
 
 // Bind controls
 filterBtns.forEach(btn => {
@@ -298,6 +337,13 @@ sortSelect.addEventListener('change', () => {
   currentSort = sortSelect.value;
   render(getFilteredSorted());
 });
+
+// Reflect sort from URL into the select if present
+try {
+  const params = new URLSearchParams(window.location.search);
+  const sort = params.get('sort');
+  if (sort) sortSelect.value = sort;
+} catch {}
 
 searchInput.addEventListener('input', () => {
   currentSearch = searchInput.value;

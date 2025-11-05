@@ -87,8 +87,7 @@ body {
 }
 
 .logo-section img {
-  width: 110px;
-  height: auto;
+  width: 220px;
 }
 
 .top-bar nav a {
@@ -100,6 +99,87 @@ body {
 }
 
 .top-bar nav a:hover {
+  color: var(--primary-yellow);
+}
+
+/* Dropdown menu (Shop icon) */
+.main-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.icon-btn:hover,
+.icon-btn[aria-expanded="true"] {
+  border-color: var(--primary-yellow);
+  background: rgba(255, 211, 0, 0.08);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 44px;
+  right: 0;
+  min-width: 160px;
+  background: #1b1b1b;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  padding: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+  display: none;
+  z-index: 1001;
+}
+
+.dropdown.open .dropdown-menu {
+  display: block;
+}
+
+.dropdown-menu a {
+  display: block;
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.dropdown-menu a:hover,
+.dropdown-menu a.active {
+  background: rgba(255, 211, 0, 0.12);
+  color: var(--primary-yellow);
+}
+
+/* Text menu button for Shop */
+.menu-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-light);
+  font: inherit;
+  cursor: pointer;
+  padding: 0;
+  font-weight: 500;
+}
+
+.menu-btn:hover,
+.menu-btn.active,
+.dropdown.open .menu-btn {
   color: var(--primary-yellow);
 }
 
@@ -121,7 +201,6 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8));
   z-index: 1;
 }
 
