@@ -16,36 +16,40 @@
 		<div class="hero-overlay">
 		<h1>Affordable Tech at Your Fingertips</h1>
 		<p>Shop the latest gadgets and electronics at unbeatable prices.</p>
-		<button class="cta-btn">Shop Now</button>
+		<a href="shop.php" class="cta-btn">Shop Now</a>
 		</div>
 	</section>
 
 	<!-- PROMOTIONS -->
 	<section class="promo-container">
 		<div class="promo-highlight">
+			<a href="product-details.php?id=lap2" class="promo-link">
 			<div class="promo-content">
 				<p class="promo-tag">Flash Deal</p>
-				<h2>MacBook Air M4 – Power Meets Portability</h2>
+				<h2>MacBook Air M4</h2>
 				<p class="promo-desc">Lightweight performance with up to 18 hours of battery life.</p>
 				<div class="promo-image">
 					<img src="assets/home/macbook.jpeg" alt="MacBook Air M4">
 				</div>	
 				<p class="promo-price">Starting at $1,299</p>
-				<button class="cta-btn dark-btn">Shop Now</button>
+				<span class="cta-btn dark-btn">View Details</span>
 			</div>
+			</a>
 		</div>
 
 		<div class="promo-highlight">
+			<a href="product-details.php?id=ph1" class="promo-link">
 			<div class="promo-content">
 				<p class="promo-tag">Flash Deal</p>
-				<h2>iPad Pro (11-inch, Wi-Fi + Cellular)</h2>
-				<p class="promo-desc">Power and portability, with Apple Pencil compatibility.</p>
+				<h2>Samsung Galaxy S25</h2>
+				<p class="promo-desc">Flagship cameras, 120Hz AMOLED, and Snapdragon Elite silicon.</p>
 				<div class="promo-image">
-					<img src="assets/home/ipad.jpg" alt="iPad Pro">
+					<img src="assets/home/ipad.jpg" alt="Samsung Galaxy S25">
 				</div>
-				<p class="promo-price">Starting at $799</p>
-				<button class="cta-btn dark-btn">Shop Now</button>
+				<p class="promo-price">Starting at $899</p>
+				<span class="cta-btn dark-btn">View Details</span>
 			</div>
+			</a>
 		</div>
 	</section>
 
@@ -65,48 +69,48 @@
 	<section class="deals">
 		<h2>Deal of the Day</h2>
 		<div class="deal-grid">
-		<div class="deal-card">
+		<a class="deal-card" href="product-details.php?id=ph1">
 			<div class="deal-sale">SALE!</div>
-			<img src="assets/home/deal1.webp" alt="Samsung Galaxy S23" class="deal-image">
-			<h3>Samsung Galaxy S23</h3>
-			<p class="old-price">$1,099.00</p>
+			<img src="assets/home/deal1.webp" alt="Samsung Galaxy S25" class="deal-image">
+			<h3>Samsung Galaxy S25</h3>
+			<p class="old-price">$1,049.00</p>
 			<p class="new-price">$899.00</p>
 			<div class="timer"></div>
-		</div>
+		</a>
 
-		<div class="deal-card">
+		<a class="deal-card" href="product-details.php?id=lap1">
 			<div class="deal-sale">SALE!</div>
 			<img src="assets/home/deal2.jpeg" alt="MacBook Air M2" class="deal-image">
 			<h3>MacBook Air M2</h3>
 			<p class="old-price">$1,399.00</p>
 			<p class="new-price">$1,099.00</p>
 			<div class="timer"></div>
-		</div>
+		</a>
 
-		<div class="deal-card">
+		<a class="deal-card" href="product-details.php?id=au1">
 			<div class="deal-sale">SALE!</div>
 			<img src="assets/home/deal3.jpg" alt="Sony WH-1000XM5" class="deal-image">
 			<h3>Sony WH-1000XM5</h3>
 			<p class="old-price">$499.00</p>
 			<p class="new-price">$399.00</p>
 			<div class="timer"></div>
-		</div>
+		</a>
 		</div>
 	</section>
 
 	<!-- BEST SELLER SPOTLIGHT -->
 	<section class="best-sellers">
-		<div class="best-highlight">
+		<a class="best-highlight best-highlight-link" href="product-details.php?id=ph2">
 		<div class="best-content">
 			<p class="best-tag">Best Seller</p>
-			<h2>iPhone 8 + 256GB</h2>
-			<p class="best-price">Starting at <span>$769</span></p>
-			<button class="cta-btn dark-btn">Buy Now</button>
+			<h2>iPhone 17 Pro</h2>
+			<p class="best-price">Starting at <span>$999</span></p>
+			<span class="cta-btn dark-btn">View Details</span>
 		</div>
 		<div class="best-image">
-			<img src="assets/home/best.png" alt="iPhone 8">
+			<img src="assets/home/best.png" alt="iPhone 17 Pro">
 		</div>
-		</div>
+		</a>
 	</section>
 
 	<?php include 'footer.php'; ?>

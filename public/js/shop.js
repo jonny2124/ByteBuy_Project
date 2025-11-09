@@ -95,14 +95,19 @@ function render(products) {
   grid.innerHTML = products.map(p => {
     const rating = Number(ratingsStore[p.id] ?? p.rating ?? 0);
     const price = Number(p.price) || 0;
+    const detailUrl = `product-details.php?id=${encodeURIComponent(p.id)}`;
     return `
       <article id="product-${p.id}" class="product-card" data-category="${p.category}">
         <figure class="product-media">
-          <img src="${p.img}" alt="${p.name}">
+          <a href="${detailUrl}" class="product-link" aria-label="View ${p.name} details">
+            <img src="${p.img}" alt="${p.name}">
+          </a>
         </figure>
         <div class="product-info">
           <p class="product-category">${p.category}</p>
-          <h3 class="product-name">${p.name}</h3>
+          <h3 class="product-name">
+            <a href="${detailUrl}">${p.name}</a>
+          </h3>
           <div class="product-meta">
             <div class="product-rating">
               ${starRatingHTML(p.id, rating)}

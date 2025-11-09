@@ -10,11 +10,11 @@
 
     <div class="footer-column">
       <h4>Products</h4>
-      <a href="shop.php?sort=rating_desc#product-lap2">MacBook Air M4</a>
-      <a href="shop.php?sort=rating_desc#product-ph1">Samsung Galaxy S23</a>
-      <a href="shop.php?sort=rating_desc#product-au1">Sony WH-1000XM5</a>
-      <a href="shop.php?sort=rating_desc#product-st1">Samsung T7 1TB SSD</a>
-      <a href="shop.php?sort=rating_desc#product-ac2">Logitech MX Master 3S</a>
+      <a href="product-details.php?id=lap2">MacBook Air M4</a>
+      <a href="product-details.php?id=ph1">Samsung Galaxy S25</a>
+      <a href="product-details.php?id=au1">Sony WH-1000XM5</a>
+      <a href="product-details.php?id=st1">Samsung T7 1TB SSD</a>
+      <a href="product-details.php?id=ac2">Logitech MX Master 3S</a>
     </div>
 
     <div class="footer-column">

@@ -1,3 +1,7 @@
+<?php
+$shopPages = ['shop.php', 'product-details.php'];
+$shopIsActive = in_array(basename($_SERVER['PHP_SELF']), $shopPages, true);
+?>
 <!-- HEADER -->
 <header class="header">
   <div class="top-bar">
@@ -8,7 +12,7 @@
     </div>
     <nav class="main-nav">
       <div class="dropdown" id="shopDropdown">
-        <button class="menu-btn <?= basename($_SERVER['PHP_SELF']) == 'shop.php' ? 'active' : '' ?>" id="shopMenuToggle" aria-haspopup="true" aria-expanded="false" aria-controls="shopMenu">Shop</button>
+        <button class="menu-btn <?= $shopIsActive ? 'active' : '' ?>" id="shopMenuToggle" aria-haspopup="true" aria-expanded="false" aria-controls="shopMenu">Shop</button>
         <div class="dropdown-menu" id="shopMenu" role="menu">
           <a href="shop.php?filter=all" role="menuitem">All</a>
           <a href="shop.php?filter=laptops" role="menuitem">Laptops</a>
