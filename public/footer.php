@@ -10,38 +10,35 @@
 
     <div class="footer-column">
       <h4>Products</h4>
-      <a href="product-details.php?id=lap2">MacBook Air M4</a>
-      <a href="product-details.php?id=ph1">Samsung Galaxy S25</a>
-      <a href="product-details.php?id=au1">Sony WH-1000XM5</a>
-      <a href="product-details.php?id=st1">Samsung T7 1TB SSD</a>
-      <a href="product-details.php?id=ac2">Logitech MX Master 3S</a>
+      <a href="shop.php?filter=laptops">Laptops</a>
+      <a href="shop.php?filter=smartphones">Smartphones</a>
+      <a href="shop.php?filter=audio">Audio</a>
+      <a href="shop.php?filter=storage">Storage</a>
+      <a href="shop.php?filter=accessories">Accessories</a>
     </div>
 
     <div class="footer-column">
-      <h4>Customer Service</h4>
-      <a href="#">News</a>
-      <a href="#">FAQ</a>
-      <a href="shop.php">Shop</a>
+      <h4>Socials</h4>
+      <a href="https://www.instagram.com/bytebuyhq" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/bytebuyhq" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.youtube.com/@bytebuyhq" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://x.com/bytebuyhq" target="_blank" rel="noopener">X</a>
+    </div>
+
+    <div class="footer-column">
+      <h4>Customer Care</h4>
+      <a href="support.php">Support</a>
+      <a href="support.php#faq">FAQ</a>
       <a href="about.php">About Us</a>
       <a href="contact.php">Contact</a>
     </div>
 
     <div class="footer-column">
-      <h4>Socials</h4>
-      <a href="#">Twitter</a>
-      <a href="#">YouTube</a>
-      <a href="#">Instagram</a>
-      <a href="#">Snapchat</a>
-      <a href="#">Facebook</a>
-    </div>
-
-    <div class="footer-column">
-      <h4>Customer Care</h4>
-      <a href="shop.php?sort=price_desc">Sale</a>
+      <h4>Quick Access</h4>
       <a href="shop.php">Shop</a>
       <a href="cart.php">Cart</a>
       <a href="order-status.php">My Orders</a>
-      <a href="contact.php">Contact</a>
+      <a href="checkout.php">Checkout</a>
     </div>
   </div>
 

@@ -25,7 +25,7 @@
         <div class="story-container">
         <div class="story-text">
             <h2>Our Story</h2>
-            <p>ByteBuy began as a simple idea — to make cutting-edge technology accessible, affordable, and reliable for everyone. From our early days as a small startup, we’ve grown into a trusted hub for digital innovation, offering products that empower modern living.</p>
+            <p>ByteBuy began as a simple idea: To make cutting-edge technology accessible, affordable, and reliable for everyone. From our early days as a small startup, we’ve grown into a trusted hub for digital innovation, offering products that empower modern living.</p>
             <p>Every product we offer is handpicked for quality and performance. We’re proud to be a community-driven brand that listens, evolves, and delivers technology that fits seamlessly into your life.</p>
         </div>
         <div class="story-image">
