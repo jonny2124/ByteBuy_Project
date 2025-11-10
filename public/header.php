@@ -24,10 +24,9 @@ $navGroups = [
             ['label' => 'All Products', 'href' => 'shop.php', 'description' => 'Full ByteBuy assortment'],
             ['label' => 'Laptops', 'href' => 'shop.php?filter=laptops', 'description' => 'Ultrabooks & creators'],
             ['label' => 'Smartphones', 'href' => 'shop.php?filter=smartphones', 'description' => 'Flagship & budget picks'],
-            ['label' => 'Audio', 'href' => 'shop.php?filter=audio', 'description' => 'Headphones + earbuds'],
+            ['label' => 'Audio', 'href' => 'shop.php?filter=audio', 'description' => 'Headphones & earbuds'],
             ['label' => 'Storage', 'href' => 'shop.php?filter=storage', 'description' => 'SSD, HDD, cards'],
             ['label' => 'Accessories', 'href' => 'shop.php?filter=accessories', 'description' => 'Everyday add-ons'],
-            ['label' => 'Featured Build', 'href' => 'product-details.php?id=lap2', 'description' => 'MacBook Air M4 spotlight'],
         ],
     ],
     [
@@ -39,11 +38,10 @@ $navGroups = [
             ['label' => 'About Us', 'href' => 'about.php', 'description' => 'Our values & mission'],
             ['label' => 'Contact', 'href' => 'contact.php', 'description' => 'Talk to our team'],
             ['label' => 'Shop Grid', 'href' => 'shop.php?sort=rating_desc', 'description' => 'Top-rated gear'],
-            ['label' => 'Order Confirmation', 'href' => 'order-confirmation.php', 'description' => 'Purchase recap'],
         ],
     ],
     [
-        'label' => 'Support',
+        'label' => 'Orders',
         'tagline' => 'Keep carts, orders, and deliveries on track.',
         'cta' => ['label' => 'Order Tracking', 'href' => 'order-status.php'],
         'links' => [
@@ -51,7 +49,6 @@ $navGroups = [
             ['label' => 'Checkout', 'href' => 'checkout.php', 'description' => 'Secure payment flow'],
             ['label' => 'Order Status', 'href' => 'order-status.php', 'description' => 'Track fulfillment'],
             ['label' => 'Order History', 'href' => 'order-confirmation.php', 'description' => 'Latest confirmation'],
-            ['label' => 'Support Inbox', 'href' => 'contact.php', 'description' => 'Submit a request'],
         ],
     ],
     [
@@ -104,7 +101,7 @@ $loginButton = $currentUser
                   <h4><?= htmlspecialchars($group['tagline']); ?></h4>
                   <?php if (!empty($group['cta'])): ?>
                     <a class="mega-cta" href="<?= htmlspecialchars($group['cta']['href']); ?>">
-                      <?= htmlspecialchars($group['cta']['label']); ?>
+                      <?= htmlspecialchars($group['cta']['label']); ?>  
                     </a>
                   <?php endif; ?>
                 </div>

@@ -51,6 +51,8 @@ INSERT INTO items (sku, name, description, price, stock, image) VALUES
 ('ac6','Apple Pencil (2nd Gen)','Apple Pencil 2 magnetically snaps, charges, and tracks notes precisely. Double-tap gestures switch tools instantly while ultra-low latency keeps strokes natural. Works with iPadOS hover preview for more accurate shading and markup.',119.00, FLOOR(RAND()*50)+1,'assets/products/ApplePencil.jpeg'),
 ('ac7','Samsung 45W PD Charger','Samsung 45W charger keeps Galaxy laptops and phones cool while fast-charging. PPS intelligence tailors voltage for safer, longer-lasting batteries. Compact brick includes a USB-C cable so you are road-ready out of the box.',39.00, FLOOR(RAND()*50)+1,'assets/products/Samsung45WPDCharger.avif'),
 ('ac8','Baseus Laptop Stand','Baseus stand lifts laptops with adjustable aluminum support and airflow. Six tilt levels improve posture, while silicon pads lock devices in place. Folds flat into a backpack sleeve yet handles 17-inch notebooks confidently.',29.00, FLOOR(RAND()*50)+1,'assets/products/BaseusLaptopStand.webp');
+('ac9','Apple Watch','Apple watch good bla bla',399.00, FLOOR(RAND()*50)+1,'assets/products/AppleWatch.png'),
+
 
 -- Example settings
 INSERT INTO settings (`key`, `value`) VALUES

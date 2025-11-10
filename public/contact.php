@@ -171,7 +171,7 @@
     <div class="location-card">
       <div class="location-info">
         <h3>Visit Our Store</h3>
-        <p>123 Byte Lane, Suite 42<br>San Francisco, CA 94107</p>
+        <p>25 Somerset Rd, #03-02<br>Singapore, SG941078</p>
         <p class="muted">Mon&ndash;Fri 9:00&ndash;6:00, Sat 10:00&ndash;4:00</p>
       </div>
       <div class="location-map" aria-hidden="true">Map Preview</div>

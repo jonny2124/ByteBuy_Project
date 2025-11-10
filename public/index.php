@@ -103,12 +103,12 @@
 		<a class="best-highlight best-highlight-link" href="product-details.php?id=ph2">
 		<div class="best-content">
 			<p class="best-tag">Best Seller</p>
-			<h2>iPhone 17 Pro</h2>
-			<p class="best-price">Starting at <span>$999</span></p>
+			<h2>Apple Watch</h2>
+			<p class="best-price">Starting at <span>$399</span></p>
 			<span class="cta-btn dark-btn">View Details</span>
 		</div>
 		<div class="best-image">
-			<img src="assets/home/best.png" alt="iPhone 17 Pro">
+			<img src="assets/home/best.png" alt="Apple Watch">
 		</div>
 		</a>
 	</section>

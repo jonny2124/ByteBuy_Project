@@ -18,19 +18,19 @@
     </div>
 
     <div class="footer-column">
-      <h4>Socials</h4>
-      <a href="https://www.instagram.com/bytebuyhq" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://www.facebook.com/bytebuyhq" target="_blank" rel="noopener">Facebook</a>
-      <a href="https://www.youtube.com/@bytebuyhq" target="_blank" rel="noopener">YouTube</a>
-      <a href="https://x.com/bytebuyhq" target="_blank" rel="noopener">X</a>
-    </div>
-
-    <div class="footer-column">
       <h4>Customer Care</h4>
       <a href="support.php">Support</a>
       <a href="support.php#faq">FAQ</a>
       <a href="about.php">About Us</a>
       <a href="contact.php">Contact</a>
+    </div>    
+
+    <div class="footer-column">
+      <h4>Socials</h4>
+      <a href="https://www.instagram.com/bytebuyhq" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.facebook.com/bytebuyhq" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.youtube.com/@bytebuyhq" target="_blank" rel="noopener">YouTube</a>
+      <a href="https://x.com/bytebuyhq" target="_blank" rel="noopener">X</a>
     </div>
 
     <div class="footer-column">
