@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS orders (
 	updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
 	CONSTRAINT fk_orders_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- Order items / lines
 CREATE TABLE IF NOT EXISTS order_items (
 	id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -70,7 +71,7 @@ CREATE TABLE IF NOT EXISTS order_events (
 	CONSTRAINT fk_ordeve_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Sessions (optional: server-side session store)
+-- Sessions 
 CREATE TABLE IF NOT EXISTS sessions (
 	id VARCHAR(128) PRIMARY KEY,
 	user_id INT UNSIGNED NULL,
@@ -91,8 +92,6 @@ CREATE TABLE IF NOT EXISTS settings (
 	`key` VARCHAR(100) PRIMARY KEY,
 	`value` TEXT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- End of schema
 
 -- Carts and cart items (token-based carts, no session cookie required)
 CREATE TABLE IF NOT EXISTS carts (

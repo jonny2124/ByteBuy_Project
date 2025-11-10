@@ -20,39 +20,48 @@ const applyHeaderScrollEffect = () => {
   document.addEventListener('scroll', onScroll);
 };
 
-// Dropdown toggle for Shop icon
-const setupShopDropdown = () => {
-  const dropdown = document.getElementById('shopDropdown');
-  const toggle = document.getElementById('shopMenuToggle');
-  if (!dropdown || !toggle) return;
+// Mega menu interactions for new header
+const setupMegaNav = () => {
+  const nav = document.querySelector('.mega-nav');
+  if (!nav) return;
 
-  const menu = document.getElementById('shopMenu');
-  const closeMenu = () => {
-    dropdown.classList.remove('open');
-    toggle.setAttribute('aria-expanded', 'false');
-  };
-  const openMenu = () => {
-    dropdown.classList.add('open');
-    toggle.setAttribute('aria-expanded', 'true');
-  };
-  const toggleMenu = () => {
-    if (dropdown.classList.contains('open')) closeMenu();
-    else openMenu();
+  const items = nav.querySelectorAll('.nav-item');
+
+  const closeAll = () => {
+    items.forEach(item => {
+      item.classList.remove('open');
+      const trigger = item.querySelector('.nav-trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
   };
 
-  toggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    toggleMenu();
+  const selectItem = (target) => {
+    items.forEach(item => item.classList.remove('is-selected'));
+    if (target) target.classList.add('is-selected');
+  };
+
+  items.forEach(item => {
+    const trigger = item.querySelector('.nav-trigger');
+    if (!trigger) return;
+
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isOpen = item.classList.contains('open');
+      closeAll();
+      selectItem(item);
+      if (!isOpen) {
+        item.classList.add('open');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
   });
 
-  // Close on outside click
   document.addEventListener('click', (e) => {
-    if (!dropdown.contains(e.target)) closeMenu();
+    if (!nav.contains(e.target)) closeAll();
   });
 
-  // Close on Escape
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeMenu();
+    if (e.key === 'Escape') closeAll();
   });
 };
 
@@ -60,9 +69,9 @@ const setupShopDropdown = () => {
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     applyHeaderScrollEffect();
-    setupShopDropdown();
+    setupMegaNav();
   });
 } else {
   applyHeaderScrollEffect();
-  setupShopDropdown();
+  setupMegaNav();
 }
