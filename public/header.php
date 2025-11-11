@@ -48,7 +48,6 @@ $navGroups = [
             ['label' => 'Cart', 'href' => 'cart.php', 'description' => 'View saved items'],
             ['label' => 'Checkout', 'href' => 'checkout.php', 'description' => 'Secure payment flow'],
             ['label' => 'Order Status', 'href' => 'order-status.php', 'description' => 'Track fulfillment'],
-            ['label' => 'Order History', 'href' => 'order-confirmation.php', 'description' => 'Latest confirmation'],
         ],
     ],
     [

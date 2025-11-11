@@ -12,7 +12,7 @@
 	<?php include 'header.php'; ?>
 
 	<!-- HERO -->
-	<section class="hero">
+	<section class="hero home-hero">
 		<div class="hero-overlay">
 		<h1>Affordable Tech at Your Fingertips</h1>
 		<p>Shop the latest gadgets and electronics at unbeatable prices.</p>
@@ -100,7 +100,7 @@
 
 	<!-- BEST SELLER SPOTLIGHT -->
 	<section class="best-sellers">
-		<a class="best-highlight best-highlight-link" href="product-details.php?id=ph2">
+		<a class="best-highlight best-highlight-link" href="product-details.php?id=ac9">
 		<div class="best-content">
 			<p class="best-tag">Best Seller</p>
 			<h2>Apple Watch</h2>

@@ -19,11 +19,11 @@
 
     <div class="footer-column">
       <h4>Customer Care</h4>
-      <a href="support.php">Support</a>
-      <a href="support.php#faq">FAQ</a>
-      <a href="about.php">About Us</a>
       <a href="contact.php">Contact</a>
-    </div>    
+      <a href="contact.php#faq">FAQ</a>
+      <a href="about.php">About Us</a>
+      <a href="contact.php">Support</a>
+    </div>      
 
     <div class="footer-column">
       <h4>Socials</h4>
@@ -43,7 +43,7 @@
   </div>
 
   <div class="footer-bottom">
-    <p>Ac 2025 ByteBuy. All rights reserved.</p>
+    <p>2025 ByteBuy. All rights reserved.</p>
     <p>Privacy Policy | Terms & Conditions</p>
   </div>
 </footer>

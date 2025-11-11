@@ -1,7 +1,7 @@
 -- Seed data for ByteBuy (generated from shop.js product list)
 USE bytebuy;
 
--- Note: password hash placeholder; create your own user via register.php if needed.
+-- Note: password hash placeholder
 INSERT INTO users (email, password_hash, full_name, is_admin)
 VALUES ('demo@example.com', '$2y$10$eImiTXuWVxfM37uY4JANj.QJ0G6fQe4Z3e2Yx1q8x/8z9s8GZ8yG', 'Demo User', 1);
 
@@ -51,7 +51,7 @@ INSERT INTO items (sku, name, description, price, stock, image) VALUES
 ('ac6','Apple Pencil (2nd Gen)','Apple Pencil 2 magnetically snaps, charges, and tracks notes precisely. Double-tap gestures switch tools instantly while ultra-low latency keeps strokes natural. Works with iPadOS hover preview for more accurate shading and markup.',119.00, FLOOR(RAND()*50)+1,'assets/products/ApplePencil.jpeg'),
 ('ac7','Samsung 45W PD Charger','Samsung 45W charger keeps Galaxy laptops and phones cool while fast-charging. PPS intelligence tailors voltage for safer, longer-lasting batteries. Compact brick includes a USB-C cable so you are road-ready out of the box.',39.00, FLOOR(RAND()*50)+1,'assets/products/Samsung45WPDCharger.avif'),
 ('ac8','Baseus Laptop Stand','Baseus stand lifts laptops with adjustable aluminum support and airflow. Six tilt levels improve posture, while silicon pads lock devices in place. Folds flat into a backpack sleeve yet handles 17-inch notebooks confidently.',29.00, FLOOR(RAND()*50)+1,'assets/products/BaseusLaptopStand.webp');
-('ac9','Apple Watch','Apple watch good bla bla',399.00, FLOOR(RAND()*50)+1,'assets/products/AppleWatch.png'),
+('ac9','Apple Watch Ultra 3','Titanium Apple Watch Ultra 3 stays our bestseller with its 3000‑nit Retina display, dual-frequency GPS, and S10 SiP that keeps fitness + safety features live all day. 36-hour battery, 100m water resistance, and the bundled Ocean Band make it the go-to pick for endurance athletes and travelers alike.',399.00,FLOOR(RAND()*50)+35,'assets/products/AppleWatch.png')
 
 
 -- Example settings

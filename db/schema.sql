@@ -71,27 +71,10 @@ CREATE TABLE IF NOT EXISTS order_events (
 	CONSTRAINT fk_ordeve_order FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Sessions 
-CREATE TABLE IF NOT EXISTS sessions (
-	id VARCHAR(128) PRIMARY KEY,
-	user_id INT UNSIGNED NULL,
-	data MEDIUMTEXT,
-	last_activity TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	INDEX idx_sessions_user (user_id),
-	CONSTRAINT fk_sessions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 -- Helpful indexes
 CREATE INDEX IF NOT EXISTS idx_items_sku_name ON items(sku, name);
 CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id);
 CREATE INDEX IF NOT EXISTS idx_orderitems_order ON order_items(order_id);
-
--- Simple table to store platform settings if needed
-CREATE TABLE IF NOT EXISTS settings (
-	`key` VARCHAR(100) PRIMARY KEY,
-	`value` TEXT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Carts and cart items (token-based carts, no session cookie required)
 CREATE TABLE IF NOT EXISTS carts (
