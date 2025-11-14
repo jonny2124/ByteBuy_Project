@@ -14,7 +14,7 @@
 
 /* HERO */
 .confirm-hero{
-  position:relative; height:48vh; min-height:340px;
+  position:relative; height:60vh; min-height:425px;
   background:
     radial-gradient(1000px 360px at 15% 15%, rgba(37,99,235,.22), transparent 60%),
     radial-gradient(1000px 360px at 85% 85%, rgba(255,211,0,.22), transparent 60%),

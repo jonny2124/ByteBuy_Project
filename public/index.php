@@ -45,7 +45,7 @@
 				<h2>Samsung Galaxy S25</h2>
 				<p class="promo-desc">Flagship cameras, 120Hz AMOLED, and Snapdragon Elite silicon.</p>
 				<div class="promo-image">
-					<img src="assets/home/ipad.jpg" alt="Samsung Galaxy S25">
+					<img src="assets/products/SamsungGalaxyS25.jpg" alt="Samsung Galaxy S25">
 				</div>
 				<p class="promo-price">Starting at $899</p>
 				<span class="cta-btn dark-btn">View Details</span>
