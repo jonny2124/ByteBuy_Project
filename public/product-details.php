@@ -103,6 +103,7 @@ $pageTitle = $product ? "{$product['name']} | ByteBuy" : 'Product Details | Byte
     <title><?= htmlspecialchars($pageTitle); ?></title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/product-detail.css">
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>

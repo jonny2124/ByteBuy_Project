@@ -23,7 +23,7 @@ if (!function_exists('bytebuy_mailer_send_order_confirmation')) {
     /**
      * Send order confirmation email using PHPMailer.
      */
-    function bytebuy_mailer_send_order_confirmation(PDO $pdo, int $orderId, string $recipientEmail, string $recipientName = ''): bool
+    function bytebuy_mailer_send_order_confirmation(PDO $pdo, int $orderId, string $recipientEmail, string $recipientName = '', array $options = []): bool
     {
         if (!$recipientEmail) {
             return false;
@@ -69,9 +69,19 @@ if (!function_exists('bytebuy_mailer_send_order_confirmation')) {
         $orderCode = $order['order_code'] ?: ('Order #' . $orderId);
         $createdAt = $order['created_at'] ? (new DateTime($order['created_at']))->format('F j, Y g:i A') : date('F j, Y g:i A');
 
+        $note = trim((string)($options['note'] ?? ''));
+        $noteHtmlBlock = '';
+        if ($note !== '') {
+            $noteHtmlBlock = sprintf(
+                '<p style="margin:12px 0;padding:12px;border-left:4px solid #2563EB;background:#F8FAFC;color:#111827;">%s</p>',
+                nl2br(htmlspecialchars($note, ENT_QUOTES, 'UTF-8'))
+            );
+        }
+
         $htmlBody = sprintf(
             '<p>Hello %s,</p>
             <p>Thank you for your purchase at ByteBuy. Your order <strong>%s</strong> was received on %s.</p>
+            %s
             <table style="width:100%%;border-collapse:collapse;margin:16px 0;">%s</table>
             <p style="text-align:right;margin:0 0 4px;"><strong>Subtotal:</strong> $%0.2f</p>
             %s
@@ -82,6 +92,7 @@ if (!function_exists('bytebuy_mailer_send_order_confirmation')) {
             htmlspecialchars($recipientName ?: $recipientEmail, ENT_QUOTES, 'UTF-8'),
             htmlspecialchars($orderCode, ENT_QUOTES, 'UTF-8'),
             htmlspecialchars($createdAt, ENT_QUOTES, 'UTF-8'),
+            $noteHtmlBlock,
             $itemsHtml,
             $subtotal,
             $discount > 0 ? sprintf('<p style="text-align:right;margin:0 0 4px;"><strong>Discounts:</strong> -$%0.2f%s</p>', $discount, $order['coupon_code'] ? ' (Code: ' . htmlspecialchars($order['coupon_code'], ENT_QUOTES, 'UTF-8') . ')' : '') : '',
@@ -97,8 +108,12 @@ if (!function_exists('bytebuy_mailer_send_order_confirmation')) {
             'Order: ' . $orderCode,
             'Placed: ' . $createdAt,
             '',
-            'Items:',
         ];
+        if ($note !== '') {
+            $plainBodyLines[] = 'Note: ' . $note;
+            $plainBodyLines[] = '';
+        }
+        $plainBodyLines[] = 'Items:';
         foreach ($items as $item) {
             $plainBodyLines[] = sprintf('- %s (Qty %d): $%0.2f', $item['name'], (int)$item['quantity'], (float)$item['price'] * (int)$item['quantity']);
         }
@@ -124,6 +139,8 @@ if (!function_exists('bytebuy_mailer_send_order_confirmation')) {
         }
 
         $mailer = new PHPMailer(true);
+        $subject = $options['subject'] ?? sprintf('Your ByteBuy order %s confirmation', $orderCode);
+
         try {
             if (($config['driver'] ?? 'smtp') === 'smtp') {
                 $mailer->isSMTP();
@@ -142,7 +159,7 @@ if (!function_exists('bytebuy_mailer_send_order_confirmation')) {
             $mailer->addReplyTo($config['from_email'] ?? 'no-reply@example.com');
 
             $mailer->isHTML(true);
-            $mailer->Subject = sprintf('Your ByteBuy order %s confirmation', $orderCode);
+            $mailer->Subject = $subject;
             $mailer->Body = $htmlBody;
             $mailer->AltBody = $plainBody;
 

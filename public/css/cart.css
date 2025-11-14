@@ -59,9 +59,8 @@
   position: relative;
   height: 42vh; min-height: 300px;
   background:
-    radial-gradient(1200px 400px at 15% 20%, rgba(37,99,235,.22), transparent 60%),
-    radial-gradient(1200px 400px at 85% 85%, rgba(255,211,0,.22), transparent 60%),
-    #0F0F0F;
+    linear-gradient(135deg, rgba(15,15,15,0.85), rgba(0,0,0,0.4)),
+    url('../assets/cart/hero.jpg') center/cover no-repeat;
   display:flex; align-items:center; justify-content:center;
   color:var(--text-light); text-align:center;
 }

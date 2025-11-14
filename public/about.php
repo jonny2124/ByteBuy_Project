@@ -6,6 +6,7 @@
     <title>About Us | ByteBuy</title>
     <link rel="stylesheet" href="css/about.css">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="assets/Favicon.png">
     <script src="js/header.js" defer></script>
     </head>
     <body>
@@ -51,7 +52,7 @@
         <div class="value-card">
             <img src="assets/about/excellence.jpg" alt="Excellence">
             <h3>Excellence</h3>
-            <p>Every detail matters — from the products we sell to the experience we deliver.</p>
+            <p>Every detail matters, from the products we sell to the experience we deliver.</p>
         </div>
         </div>
     </section>

@@ -1,5 +1,5 @@
 <?php
-// cart.php — serves both as page and JSON API for cart actions
+// cart.php - serves both as page and JSON API for cart actions
 require_once __DIR__ . '/db.php';
 
 // If this is an AJAX/API request, respond with JSON
@@ -179,7 +179,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     exit;
 }
 
-// Non-AJAX: render the cart page — actual items will be loaded client-side via the cart token
+// Non-AJAX: render the cart page - actual items will be loaded client-side via the cart token
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
@@ -188,6 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
   <title>Your Cart | ByteBuy</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/cart.css" />
+  <link rel="icon" type="image/png" href="assets/Favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="js/header.js" defer></script>
   <script src="js/cart.js" defer></script>

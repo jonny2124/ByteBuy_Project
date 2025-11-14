@@ -14,11 +14,10 @@
 
 /* HERO */
 .checkout-hero{
-  position:relative; height:40vh; min-height:280px;
+  position:relative; height:48vh; min-height:340px;
   background:
-    radial-gradient(1000px 360px at 15% 15%, rgba(37,99,235,.22), transparent 60%),
-    radial-gradient(1000px 360px at 85% 85%, rgba(255,211,0,.22), transparent 60%),
-    #0F0F0F;
+    linear-gradient(135deg, rgba(15,15,15,0.85), rgba(0,0,0,0.4)),
+    url('../assets/checkout/hero.jpg') center/cover no-repeat;
   display:flex; align-items:center; justify-content:center; color:var(--text-light);
   text-align:center;
 }

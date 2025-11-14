@@ -61,6 +61,8 @@ try {
 
         switch ($coupon['type']) {
             case 'percent':
+
+                
                 $percent = max(0, min(100, (float)$coupon['value']));
                 $discount_total = round($subtotal * ($percent / 100), 2);
                 break;
@@ -152,6 +154,7 @@ try {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Checkout Error | ByteBuy</title>
         <link rel="stylesheet" href="css/styles.css">
+        <link rel="icon" type="image/png" href="assets/Favicon.png">
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     </head>
     <body>

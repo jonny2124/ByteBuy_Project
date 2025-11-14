@@ -39,6 +39,11 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
 }
 
 .cta-btn:hover {
@@ -482,8 +487,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
-  gap: 40px;
-  padding: 100px 5%;
+  gap: 28px;
+  padding: 60px 5%;
   flex-wrap: wrap;
 }
 
@@ -577,14 +582,14 @@ body {
    CATEGORIES
    ========================== */
 .categories {
-  padding: 60px 5%;
-  text-align: center;
-}
+    padding: 40px 5%;
+    text-align: center;
+  }
 
 .categories h2 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
+    font-size: 2rem;
+    margin-bottom: 28px;
+  }
 
 .category-grid {
   display: flex;
@@ -599,12 +604,12 @@ body {
 .category-card {
   flex: 0 0 auto;
   background: #fff;
-  border: 2px solid var(--accent-blue);
+  border: 1px solid #eee;
   border-radius: 16px;
   padding: 20px;
   width: 260px;
   scroll-snap-align: start;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .category-card:hover {
@@ -625,7 +630,7 @@ body {
    ========================== */
 .deals {
   background: linear-gradient(to right, #2563EB15, #FFD30015);
-  padding: 80px 5%;
+  padding: 60px 5%;
   text-align: center;
 }
 
@@ -633,7 +638,7 @@ body {
   font-size: 2rem;
   font-weight: 700;
   color: #0B0F19;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .deal-grid {
@@ -725,7 +730,7 @@ body {
 .best-sellers {
   background: #121212;
   color: #fff;
-  padding: 60px 8%;
+  padding: 50px 8%;
 }
 
 .best-highlight {
@@ -868,3 +873,7 @@ body {
     margin-top: 20px;
   }
 }
+
+
+
+

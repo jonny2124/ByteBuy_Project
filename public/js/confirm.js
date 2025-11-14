@@ -70,7 +70,7 @@
   }
 
   // Init
-  // Init — prefer server-provided order data when available
+  // Init - prefer server-provided order data when available
   const serverOrder = window.__ORDER_DATA || null;
   if (serverOrder) {
     const orderDate = serverOrder.created_at ? new Date(serverOrder.created_at) : new Date();

@@ -6,6 +6,7 @@
   <title>Contact Us | ByteBuy</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/contact.css" />
+  <link rel="icon" type="image/png" href="assets/Favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="js/header.js" defer></script>
   <meta name="description" content="Contact ByteBuy support for product advice, orders, bulk pricing, and tech guidance. We're here to help." />
@@ -88,7 +89,7 @@
             </div>
           </div>
 
-          <div class="field">
+          <div class="field stretch-field">
             <label for="message">Message</label>
             <textarea id="message" name="message" rows="6" placeholder="Tell us how we can help..." required></textarea>
           </div>
@@ -171,10 +172,16 @@
     <div class="location-card">
       <div class="location-info">
         <h3>Visit Our Store</h3>
-        <p>25 Somerset Rd, #03-02<br>Singapore, SG941078</p>
+        <p>313 Orchard Rd<br>Singapore 238895</p>
         <p class="muted">Mon&ndash;Fri 9:00&ndash;6:00, Sat 10:00&ndash;4:00</p>
       </div>
-      <div class="location-map" aria-hidden="true">Map Preview</div>
+      <div class="location-map" aria-hidden="true">
+        <iframe
+          title="ByteBuy Flagship Location"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15955.204108275032!2d103.829!3d1.3039!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31da1990b8e47b37%3A0xbdeb1c437ff3be48!2s313%20Orchard%20Road!5e0!3m2!1sen!2ssg!4v1736534400"
+          width="100%" height="220" style="border:0;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
     </div>
   </section>
 

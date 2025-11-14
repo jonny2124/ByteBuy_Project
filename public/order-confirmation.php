@@ -6,6 +6,7 @@
   <title>Order Confirmation | ByteBuy</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/confirm.css" />
+  <link rel="icon" type="image/png" href="assets/Favicon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
   <script src="js/header.js" defer></script>
   <script src="js/confirm.js" defer></script>
@@ -19,7 +20,7 @@
     <div class="confirm-hero-overlay">
       <div class="success-badge">✓</div>
       <h1>Your Order Has Been Placed!</h1>
-      <p>Thank you for choosing ByteBuy — we’re packing your tech.</p>
+      <p>Thank you for choosing ByteBuy; we’re packing your tech.</p>
     </div>
   </section>
 
@@ -36,11 +37,11 @@
           </div>
           <div class="detail">
             <span class="label">Date</span>
-            <span class="value" id="orderDate">—</span>
+            <span class="value" id="orderDate">-</span>
           </div>
           <div class="detail">
             <span class="label">Estimated Delivery</span>
-            <span class="value" id="deliveryEstimate">—</span>
+            <span class="value" id="deliveryEstimate">-</span>
           </div>
         </div>
 
@@ -65,7 +66,7 @@
 
         <div class="thankyou">
           <h3>Thank you!</h3>
-          <p>We’re a small, dedicated team making reliable tech accessible for everyone — from students and young creators to busy parents and practical professionals. If you need help, reply to your confirmation email or reach out anytime.</p>
+          <p>We’re a small, dedicated team making reliable tech accessible for everyone, from students and young creators to busy parents and practical professionals. If you need help, reply to your confirmation email or reach out anytime.</p>
         </div>
       </aside>
 
